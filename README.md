@@ -1,39 +1,22 @@
-<div align="center">
-
 # nix408
 
 **WhatsApp Web automation, refined.**
 
-A maintained fork of [@itsliaaa/baileys](https://github.com/itsliaaa/baileys) &rarr;
-[WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys), extended with the message
-types WhatsApp actually ships today.
+nix408 is a maintained fork of [@itsliaaa/baileys](https://github.com/itsliaaa/baileys), itself a
+fork of [WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys). It keeps the
+battle-tested WhatsApp Web protocol implementation and extends it with the message types WhatsApp
+actually ships today — buttons, lists, albums, polls, payments, rich responses and more.
 
-<br>
+```bash
+npm install github:marrspace/nix408#main
+```
 
-<a href="https://github.com/marrspace/nix408">
-  <img src="https://img.shields.io/github/stars/marrspace/nix408?style=for-the-badge&logo=github&labelColor=0b0f14&color=22d3ee"/>
-</a>
-<a href="LICENSE">
-  <img src="https://img.shields.io/badge/license-MIT-22d3ee?style=for-the-badge&labelColor=0b0f14"/>
-</a>
-<a href="https://nodejs.org">
-  <img src="https://img.shields.io/badge/node-%3E%3D20-3c873a?style=for-the-badge&logo=node.js&logoColor=white&labelColor=0b0f14"/>
-</a>
-<a href="#">
-  <img src="https://img.shields.io/badge/module-ESM-f7df1e?style=for-the-badge&logo=javascript&logoColor=black&labelColor=0b0f14"/>
-</a>
-<a href="#-credits">
-  <img src="https://img.shields.io/badge/fork%20of-Baileys-8b5cf6?style=for-the-badge&labelColor=0b0f14"/>
-</a>
-
-</div>
-
----
+[Quick start](#quick-start) · [Reference](#documentation) · [Lineage](#lineage) · [Credits](#credits)
 
 ## About
 
-**nix408** is our take on Baileys. It keeps the part that matters &mdash; a battle-tested
-implementation of the WhatsApp Web protocol &mdash; and pushes it further:
+**nix408** is our take on Baileys. It keeps the part that matters — a battle-tested
+implementation of the WhatsApp Web protocol — and pushes it further:
 
 - first-class support for **interactive messages, albums, rich responses and payments**;
 - a **readable, auditable codebase** (no obfuscation, no hidden behaviour);
@@ -46,35 +29,33 @@ authors are credited in full at the bottom of this file and in [LICENSE](LICENSE
 
 ## Why nix408?
 
-| | |
-|---|---|
-| 🧩 | **One library for every message type** &mdash; buttons, lists, native flows, carousels, albums, polls, payments, rich responses, code blocks, tables and inline entities. |
-| 🔍 | **Readable by design** &mdash; open any file and understand it. No obfuscation, no surprises. |
-| 📰 | **Newsletter media, fixed** &mdash; sending media to channels no longer fails upstream. |
-| 🛡️ | **Safer process handling** &mdash; FFmpeg is invoked with `spawn`, never `exec`. |
-| 🪶 | **Heavy deps stay optional** &mdash; image/audio backends are peer dependencies; install only what you use. |
-| 📚 | **Docs that ship examples** &mdash; every feature below has a copy-paste snippet. |
-| 🚫 | **No auto-follow** &mdash; nix408 never silently follows a newsletter for you. |
+- **One library for every message type** — buttons, lists, native flows, carousels, albums, polls, payments, rich responses, code blocks, tables and inline entities.
+- **Readable by design** — open any file and understand it. No obfuscation, no surprises.
+- **Newsletter media, fixed** — sending media to channels no longer fails upstream.
+- **Safer process handling** — FFmpeg is invoked with `spawn`, never `exec`.
+- **Heavy deps stay optional** — image/audio backends are peer dependencies; install only what you use.
+- **Docs that ship examples** — every feature below has a copy-paste snippet.
+- **No auto-follow** — nix408 never silently follows a newsletter for you.
 
 ## What's inside
 
 | Feature | Highlights |
-|---|---|
-| 💬 **Interactive messages** | Buttons, lists, native flows, hydrated templates, carousels |
-| 🖼️ **Albums** | Multiple images/videos in a single album message |
-| ✨ **Rich responses** | Structured rich replies with citations and sources |
-| 🧾 **Rich text** | Code blocks, tables, inline entities |
-| 💳 **Payments** | Payment requests, invites, orders, invoices |
-| 📦 **Sticker packs** | Multi-sticker packs with cover and metadata |
-| 📊 **Polls & events** | Native polls, calendar events, group invites |
-| 👁️ **Ephemeral / view-once** | Wrapper flags incl. view-once V2 and its extension |
-| 📣 **Newsletters** | Management API + the media upload fix |
-| 👥 **Groups & communities** | Full management APIs |
+| --- | --- |
+| **Interactive messages** | Buttons, lists, native flows, hydrated templates, carousels |
+| **Albums** | Multiple images/videos in a single album message |
+| **Rich responses** | Structured rich replies with citations and sources |
+| **Rich text** | Code blocks, tables, inline entities |
+| **Payments** | Payment requests, invites, orders, invoices |
+| **Sticker packs** | Multi-sticker packs with cover and metadata |
+| **Polls & events** | Native polls, calendar events, group invites |
+| **Ephemeral / view-once** | Wrapper flags incl. view-once V2 and its extension |
+| **Newsletters** | Management API + the media upload fix |
+| **Groups & communities** | Full management APIs |
 
 ## Requirements
 
-- **Node.js &ge; 20** &mdash; enforced at install time by `engine-requirements.js`.
-- **ESM first** &mdash; `"type": "module"`. CommonJS `require()` is supported and tested on Node 24.
+- **Node.js ≥ 20** — enforced at install time by `engine-requirements.js`.
+- **ESM first** — `"type": "module"`. CommonJS `require()` is supported and tested on Node 24.
 
 ## Quick start
 
@@ -94,98 +75,89 @@ sock.ev.on('connection.update', ({ connection }) => {
 })
 ```
 
-Full walkthrough &rarr; [Connect to WhatsApp](#-connect-to-whatsapp-quick-step).
+Full walkthrough → [Connect to WhatsApp](#connecting-to-whatsapp).
 
 ## Documentation
 
-Every section below is a reference with runnable examples &mdash; jump to a topic:
+Every section below is a reference with runnable examples — jump to a topic:
 
-### 📋 Table of Contents
+### Contents
 
-- [About](#about)
-- [Why nix408?](#why-nix408)
-- [What's inside](#whats-inside)
-- [Requirements](#requirements)
-- [Quick start](#quick-start)
-- [Documentation](#documentation)
-- [📥 Installation](#-installation)
-   - [🧩 Import (ESM & CJS)](#-import-esm--cjs)
-- [🌐 Connect to WhatsApp (Quick Step)](#-connect-to-whatsapp-quick-step)
-   - [🔐 Auth State](#-auth-state)
-- [🗄️ Implementing Data Store](#%EF%B8%8F-implementing-data-store)
-- [🪪 WhatsApp IDs Explain](#-whatsapp-ids-explain)
-- [✉️ Sending Messages](#%EF%B8%8F-sending-messages)
-   - [🔠 Text](#-text)
-   - [🔔 Mention](#-mention)
-   - [😁 Reaction](#-reaction)
-   - [📌 Pin Message](#-pin-message)
-   - [🔖 Keep Chat](#-keep-chat)
-   - [➡️ Forward Message](#%EF%B8%8F-forward-message)
-   - [👤 Contact](#-contact)
-   - [📍 Location](#-location)
-   - [🗓️ Event](#%EF%B8%8F-event)
-   - [👥 Group Invite](#-group-invite)
-   - [🛍️ Product](#%EF%B8%8F-product)
-   - [📊 Poll](#-poll)
-   - [💭 Button Response](#-button-response)
-   - [✨ Rich Response](#-rich-response)
-   - [🧾 Message with Code Block](#-message-with-code-block)
-   - [🌏 Message with Inline Entities](#-message-with-inline-entities)
-   - [📋 Message with Table](#-message-with-table)
-   - [🎞️ Status Mention](#%EF%B8%8F-status-mention)
-- [📁 Sending Media Messages](#-sending-media-messages)
-   - [🖼️ Image](#%EF%B8%8F-image)
-   - [🎥 Video](#-video)
-   - [📃 Sticker](#-sticker)
-   - [💽 Audio](#-audio)
-   - [🗂️ Document](#%EF%B8%8F-document)
-   - [🖼️ Album (Image & Video)](#%EF%B8%8F-album-image--video)
-   - [📦 Sticker Pack](#-sticker-pack)
-- [👉🏻 Sending Interactive Messages](#-sending-interactive-messages)
-   - [🔘 Buttons](#-buttons)
-   - [📋 List](#-list)
-   - [🗄️ Interactive](#%EF%B8%8F-interactive)
-   - [🫙 Hydrated Template](#-hydrated-template)
-- [💳 Sending Payment Messages](#-sending-payment-messages)
-   - [➕ Invite Payment](#-invite-payment)
-   - [🧾 Invoice](#-invoice)
-   - [🛍️ Order](#%EF%B8%8F-order)
-   - [💳 Request Payment](#-request-payment)
-- [👁️ Other Message Options](#%EF%B8%8F-other-message-options)
-   - [🤖 AI Icon](#-ai-icon)
-   - [🕒 Ephemeral](#-ephemeral)
-   - [📰 External Ad Reply](#-external-ad-reply)
-   - [🧑‍🧑‍🧒 Group Status](#%E2%80%8D%E2%80%8D-group-status)
-   - [🐱 Lottie Sticker](#-lottie-sticker)
-   - [🧩 Raw](#-raw)
-   - [🏷️ Secure Meta Service Label](#%EF%B8%8F-secure-meta-service-label)
-   - [📑 Spoiler](#-spoiler)
-   - [👁️ View Once](#%EF%B8%8F-view-once)
-   - [👁️ View Once V2](#%EF%B8%8F-view-once-v2)
-   - [👁️ View Once V2 Extension](#%EF%B8%8F-view-once-v2-extension)
-- [♻️ Modify Messages](#%EF%B8%8F-modify-messages)
-   - [🗑️ Delete Messages](#%EF%B8%8F-delete-messages)
-   - [✏️ Edit Messages](#%EF%B8%8F-edit-messages)
-- [🧰 Additional Contents](#-additional-contents)
-   - [🏷️ Find User ID (JID|PN/LID)](#%EF%B8%8F-find-user-id-jidpnlid)
-   - [🔑 Request Custom Pairing Code](#-request-custom-pairing-code)
-   - [🖼️ Image Processing](#%EF%B8%8F-image-processing)
-   - [📣 Newsletter Management](#-newsletter-management)
-   - [👥 Group Management](#-group-management)
-   - [👥 Community Management](#-community-management)
-   - [👤 Profile Management](#-profile-management)
-   - [🛒 Business Management](#-business-management)
-   - [🔐 Privacy Management](#-privacy-management)
-   - [📡 Events](#-events)
-- [🔗 Links](#-links)
-- [📦 Fork Base](#-fork-base)
-- [📣 Credits](#-credits)
+- [Installation](#installation)
+  - [Import (ESM & CJS)](#import-esm--cjs)
+- [Connecting to WhatsApp](#connecting-to-whatsapp)
+  - [Auth State](#auth-state)
+- [Data store](#data-store)
+- [WhatsApp IDs](#whatsapp-ids)
+- [Sending messages](#sending-messages)
+  - [Text](#text)
+  - [Mention](#mention)
+  - [Reaction](#reaction)
+  - [Pin Message](#pin-message)
+  - [Keep Chat](#keep-chat)
+  - [Forward Message](#forward-message)
+  - [Contact](#contact)
+  - [Location](#location)
+  - [Event](#event)
+  - [Group Invite](#group-invite)
+  - [Product](#product)
+  - [Poll](#poll)
+  - [Button Response](#button-response)
+  - [Rich Response](#rich-response)
+  - [Message with Code Block](#message-with-code-block)
+  - [Message with Inline Entities](#message-with-inline-entities)
+  - [Message with Table](#message-with-table)
+  - [Status Mention](#status-mention)
+- [Sending media](#sending-media)
+  - [Image](#image)
+  - [Video](#video)
+  - [Sticker](#sticker)
+  - [Audio](#audio)
+  - [Document](#document)
+  - [Album (Image & Video)](#album-image--video)
+  - [Sticker Pack](#sticker-pack)
+- [Interactive messages](#interactive-messages)
+  - [Buttons](#buttons)
+  - [List](#list)
+  - [Interactive](#interactive)
+  - [Hydrated Template](#hydrated-template)
+- [Payment messages](#payment-messages)
+  - [Invite Payment](#invite-payment)
+  - [Invoice](#invoice)
+  - [Order](#order)
+  - [Request Payment](#request-payment)
+- [Message options](#message-options)
+  - [AI Icon](#ai-icon)
+  - [Ephemeral](#ephemeral)
+  - [External Ad Reply](#external-ad-reply)
+  - [Group Status](#group-status)
+  - [Lottie Sticker](#lottie-sticker)
+  - [Raw](#raw)
+  - [Secure Meta Service Label](#secure-meta-service-label)
+  - [Spoiler](#spoiler)
+  - [View Once](#view-once)
+  - [View Once V2](#view-once-v2)
+  - [View Once V2 Extension](#view-once-v2-extension)
+- [Modifying messages](#modifying-messages)
+  - [Delete Messages](#delete-messages)
+  - [Edit Messages](#edit-messages)
+- [API reference](#api-reference)
+  - [Find User ID (JID|PN/LID)](#find-user-id-jidpnlid)
+  - [Request Custom Pairing Code](#request-custom-pairing-code)
+  - [Image Processing](#image-processing)
+  - [Newsletter Management](#newsletter-management)
+  - [Group Management](#group-management)
+  - [Community Management](#community-management)
+  - [Profile Management](#profile-management)
+  - [Business Management](#business-management)
+  - [Privacy Management](#privacy-management)
+  - [Events](#events)
 
-### 📥 Installation
+### Installation
 
 nix408 is distributed through GitHub. It is **not** published on npm.
 
-- ⌨️ Via terminal
+- **Terminal**
 
 ```bash
 npm install github:marrspace/nix408#main
@@ -195,7 +167,7 @@ yarn add github:marrspace/nix408#main
 pnpm add github:marrspace/nix408#main
 ```
 
-- 📄 Via `package.json`
+- **package.json**
 
 ```json
 "dependencies": {
@@ -203,7 +175,7 @@ pnpm add github:marrspace/nix408#main
 }
 ```
 
-#### 🧩 Import (ESM & CJS)
+#### Import (ESM & CJS)
 
 ```javascript
 // --- ESM
@@ -213,7 +185,7 @@ import { makeWASocket } from 'nix408'
 const { makeWASocket } = require('nix408')
 ```
 
-### 🌐 Connect to WhatsApp (Quick Step)
+### Connecting to WhatsApp
 
 ```javascript
 import { makeWASocket, delay, DisconnectReason, useMultiFileAuthState } from 'nix408'
@@ -269,12 +241,12 @@ const connectToWhatsApp = async () => {
 connectToWhatsApp()
 ```
 
-#### 🔐 Auth State
+#### Auth State
 
 > [!NOTE]
-> You can use the experimental `useSingleFileAuthState` and `useSqliteAuthState` as an alternative to `useMultiFileAuthState`. However, `useSingleFileAuthState` already includes an internal caching mechanism, so there is no need to wrap `state.keys` with `makeCacheableSignalKeyStore`.
+> You can use the experimental useSingleFileAuthState and useSqliteAuthState as an alternative to useMultiFileAuthState. However, useSingleFileAuthState already includes an internal caching mechanism, so there is no need to wrap state.keys with makeCacheableSignalKeyStore.
 
-### 🗄️ Implementing Data Store
+### Data store
 
 > [!CAUTION]
 > I highly recommend building your own data store, as keeping an entire chat history in memory can lead to excessive RAM usage.
@@ -347,7 +319,7 @@ const connectToWhatsApp = async () => {
 connectToWhatsApp()
 ```
 
-### 🪪 WhatsApp IDs Explain
+### WhatsApp IDs
 
 `id` is the WhatsApp ID, called `jid` and `lid` too, of the person or group you're sending the message to.
 - It must be in the format `[country code][phone number]@s.whatsapp.net`
@@ -357,12 +329,12 @@ connectToWhatsApp()
 - For broadcast lists, it's `[timestamp of creation]@broadcast`.
 - For stories, the ID is `status@broadcast`.
 
-### ✉️ Sending Messages
+### Sending messages
 
 > [!NOTE]
-> You can get the `jid` from `message.key.remoteJid` in the first example.
+> You can get the jid from message.key.remoteJid in the first example.
 
-#### 🔠 Text
+#### Text
 
 ```javascript
 // --- Send a regular text message
@@ -424,7 +396,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🔔 Mention
+#### Mention
 
 ```javascript
 // --- Regular mention
@@ -444,7 +416,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 😁 Reaction
+#### Reaction
 
 ```javascript
 sock.sendMessage(jid, {
@@ -455,7 +427,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📌 Pin Message
+#### Pin Message
 
 ```javascript
 sock.sendMessage(jid, {
@@ -465,7 +437,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🔖 Keep Chat
+#### Keep Chat
 
 > [!NOTE]
 > Keep Chat can only be used in chats or groups with disappearing messages enabled.
@@ -477,7 +449,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### ➡️ Forward Message
+#### Forward Message
 
 ```javascript
 sock.sendMessage(jid, {
@@ -486,7 +458,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 👤 Contact
+#### Contact
 
 ```javascript
 const vcard = 'BEGIN:VCARD\n'
@@ -508,7 +480,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📍 Location
+#### Location
 
 ```javascript
 sock.sendMessage(jid, {
@@ -522,7 +494,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🗓️ Event
+#### Event
 
 ```javascript
 sock.sendMessage(jid, {
@@ -546,7 +518,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 👥 Group Invite
+#### Group Invite
 
 ```javascript
 const inviteCode = groupUrl
@@ -569,7 +541,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🛍️ Product
+#### Product
 
 ```javascript
 import { randomUUID } from 'crypto'
@@ -595,7 +567,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📊 Poll
+#### Poll
 
 ```javascript
 // --- Regular poll message
@@ -657,7 +629,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 💭 Button Response
+#### Button Response
 
 ```javascript
 // --- Using buttonsResponseMessage
@@ -710,13 +682,13 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### ✨ Rich Response
+#### Rich Response
 
 > [!NOTE]
-> `richResponse[]` is a representation of [`submessages[]`](https://baileys.wiki/docs/api/namespaces/proto/interfaces/IAIRichResponseSubMessage) inside `richResponseMessage`.
+> richResponse[] is a representation of [submessages[]](https://baileys.wiki/docs/api/namespaces/proto/interfaces/IAIRichResponseSubMessage) inside richResponseMessage.
 
 > [!TIP]
-> You can still use the original [`submessages[]`](https://baileys.wiki/docs/api/namespaces/proto/interfaces/IAIRichResponseSubMessage) field directly.
+> You can still use the original [submessages[]](https://baileys.wiki/docs/api/namespaces/proto/interfaces/IAIRichResponseSubMessage) field directly.
 > The code example below is just an implementation using a helper, not a required structure.
 
 ```javascript
@@ -753,7 +725,7 @@ sock.sendMessage(jid, {
 ```
 
 > [!TIP]
-> You can easily add syntax highlighting by importing `tokenizeCode` directly from Baileys.
+> You can easily add syntax highlighting by importing tokenizeCode directly from Baileys.
 
 ```javascript
 import { tokenizeCode } from 'nix408'
@@ -774,12 +746,12 @@ sock.sendMessage(jid, {
 })
 ```
 
-> 💡 Supported Languages: `css`, `html`, `javascript`, `typescript`, `python`, `golang`, `rust`, `c`, `c#`, `c++`, `bash`, `bat`, `powershell`.
+> Supported Languages: css, html, javascript, typescript, python, golang, rust, c, c#, c++, bash, bat, powershell.
 
-#### 🧾 Message with Code Block
+#### Message with Code Block
 
 > [!NOTE]
-> This feature already includes a built-in tokenizer with `tokenizeCode`.
+> This feature already includes a built-in tokenizer with tokenizeCode.
 
 ```javascript
 sock.sendMessage(jid, {
@@ -792,7 +764,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🌏 Message with Inline Entities
+#### Message with Inline Entities
 
 ```javascript
 sock.sendMessage(jid, {
@@ -816,7 +788,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📋 Message with Table
+#### Message with Table
 
 ```javascript
 sock.sendMessage(jid, {
@@ -834,7 +806,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🎞️ Status Mention
+#### Status Mention
 
 ```javascript
 sock.sendMessage([jidA, jidB, jidC], {
@@ -842,12 +814,12 @@ sock.sendMessage([jidA, jidB, jidC], {
 })
 ```
 
-### 📁 Sending Media Messages
+### Sending media
 
 > [!NOTE]
-> For media messages, you can pass a `Buffer` directly, or an object with either `{ stream: Readable }` or `{ url: string }` (local file path or HTTP/HTTPS URL).
+> For media messages, you can pass a Buffer directly, or an object with either { stream: Readable } or { url: string } (local file path or HTTP/HTTPS URL).
 
-#### 🖼️ Image
+#### Image
 
 ```javascript
 sock.sendMessage(jid, {
@@ -860,7 +832,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🎥 Video
+#### Video
 
 ```javascript
 sock.sendMessage(jid, {
@@ -875,7 +847,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📃 Sticker
+#### Sticker
 
 ```javascript
 sock.sendMessage(jid, {
@@ -887,7 +859,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 💽 Audio
+#### Audio
 
 ```javascript
 sock.sendMessage(jid, {
@@ -900,7 +872,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🗂️ Document
+#### Document
 
 ```javascript
 sock.sendMessage(jid, {
@@ -914,7 +886,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🖼️ Album (Image & Video)
+#### Album (Image & Video)
 
 ```javascript
 sock.sendMessage(jid, {
@@ -944,10 +916,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📦 Sticker Pack
+#### Sticker Pack
 
 > [!IMPORTANT]
-> If `sharp` or `@napi-rs/image` is not installed, the `cover` and `stickers` must already be in WebP format.
+> If sharp or @napi-rs/image is not installed, the cover and stickers must already be in WebP format.
 
 ```javascript
 sock.sendMessage(jid, {
@@ -975,9 +947,9 @@ sock.sendMessage(jid, {
 })
 ```
 
-### 👉🏻 Sending Interactive Messages
+### Interactive messages
 
-#### 🔘 Buttons
+#### Buttons
 
 ```javascript
 // --- Regular buttons message
@@ -1028,10 +1000,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📋 List
+#### List
 
 > [!NOTE]
-> It only works in private chat (`@s.whatsapp.net`).
+> It only works in private chat (@s.whatsapp.net).
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1059,7 +1031,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🗄️ Interactive
+#### Interactive
 
 ```javascript
 // --- Native Flow
@@ -1190,7 +1162,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🫙 Hydrated Template
+#### Hydrated Template
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1215,9 +1187,9 @@ sock.sendMessage(jid, {
 })
 ```
 
-### 💳 Sending Payment Messages
+### Payment messages
 
-#### ➕ Invite Payment
+#### Invite Payment
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1225,7 +1197,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🧾 Invoice
+#### Invoice
 
 > [!NOTE]
 > Invoice message are not supported yet.
@@ -1239,7 +1211,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🛍️ Order
+#### Order
 
 ```javascript
 sock.sendMessage(chat, {
@@ -1250,7 +1222,7 @@ sock.sendMessage(chat, {
 })
 ```
 
-#### 💳 Request Payment
+#### Request Payment
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1259,12 +1231,12 @@ sock.sendMessage(jid, {
 })
 ```
 
-### 👁️ Other Message Options
+### Message options
 
-#### 🤖 AI Icon
+#### AI Icon
 
 > [!NOTE]
-> It only works in private chat (`@s.whatsapp.net`).
+> It only works in private chat (@s.whatsapp.net).
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1278,10 +1250,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🕒 Ephemeral
+#### Ephemeral
 
 > [!NOTE]
-> Wrap message into `ephemeralMessage`
+> Wrap message into ephemeralMessage
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1293,7 +1265,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📰 External Ad Reply
+#### External Ad Reply
 
 > [!NOTE]
 > Add an ad thumbnail to messages (may not be displayed on some WhatsApp versions).
@@ -1313,10 +1285,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🧑‍🧑‍🧒 Group Status
+#### Group Status
 
 > [!NOTE]
-> It only works in group chat (`@g.us`)
+> It only works in group chat (@g.us)
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1328,10 +1300,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🐱 Lottie Sticker
+#### Lottie Sticker
 
 > [!NOTE]
-> Wrap message into `lottieStickerMessage`
+> Wrap message into lottieStickerMessage
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1342,7 +1314,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🧩 Raw
+#### Raw
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1364,7 +1336,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 🏷️ Secure Meta Service Label
+#### Secure Meta Service Label
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1373,10 +1345,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 📑 Spoiler
+#### Spoiler
 
 > [!NOTE]
-> Wrap message into `spoilerMessage`
+> Wrap message into spoilerMessage
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1388,10 +1360,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 👁️ View Once
+#### View Once
 
 > [!NOTE]
-> Wrap message into `viewOnceMessage`
+> Wrap message into viewOnceMessage
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1403,10 +1375,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 👁️ View Once V2
+#### View Once V2
 
 > [!NOTE]
-> Wrap message into `viewOnceMessageV2`
+> Wrap message into viewOnceMessageV2
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1418,10 +1390,10 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### 👁️ View Once V2 Extension
+#### View Once V2 Extension
 
 > [!NOTE]
-> Wrap message into `viewOnceMessageV2Extension`
+> Wrap message into viewOnceMessageV2Extension
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1433,9 +1405,9 @@ sock.sendMessage(jid, {
 })
 ```
 
-### ♻️ Modify Messages
+### Modifying messages
 
-#### 🗑️ Delete Messages
+#### Delete Messages
 
 ```javascript
 sock.sendMessage(jid, {
@@ -1443,7 +1415,7 @@ sock.sendMessage(jid, {
 })
 ```
 
-#### ✏️ Edit Messages
+#### Edit Messages
 
 ```javascript
 // --- Edit plain text
@@ -1459,9 +1431,9 @@ sock.sendMessage(jid, {
 })
 ```
 
-### 🧰 Additional Contents
+### API reference
 
-#### 🏷️ Find User ID (JID|PN/LID)
+#### Find User ID (JID|PN/LID)
 
 > [!NOTE]
 > The ID must contain numbers only (no +, (), or -) and must include the country code with WhatsApp ID format.
@@ -1494,7 +1466,7 @@ console.log('🏷️ Got user ID', ':', ids)
 // --- Same output shape regardless of input type
 ```
 
-#### 🔑 Request Custom Pairing Code
+#### Request Custom Pairing Code
 
 > [!NOTE]
 > The phone number must contain numbers only (no +, (), or -) and must include the country code.
@@ -1508,10 +1480,10 @@ await sock.requestPairingCode(phoneNumber, customPairingCode)
 console.log('🔗 Pairing code', ':', customPairingCode)
 ```
 
-#### 🖼️ Image Processing
+#### Image Processing
 
 > [!NOTE]
-> Automatically use available image processing library: `sharp`, `@napi-rs/image`, or `jimp`
+> Automatically use available image processing library: sharp, @napi-rs/image, or jimp
 
 ```javascript
 import { getImageProcessingLibrary } from 'nix408'
@@ -1564,7 +1536,7 @@ console.log('✅ Process completed!')
 console.dir(output, { depth: null })
 ```
 
-#### 📣 Newsletter Management
+#### Newsletter Management
 
 ```javascript
 // --- Create a new one
@@ -1627,7 +1599,7 @@ console.dir(messages, { depth: null })
 sock.newsletterDelete('1231111111111@newsletter')
 ```
 
-#### 👥 Group Management
+#### Group Management
 
 ```javascript
 // --- Create a new one and add participants using their JIDs
@@ -1725,7 +1697,7 @@ console.log('👥 Got group info from invite code', ':', group)
 sock.updateMemberLabel(jid, 'nix408')
 ```
 
-#### 👥 Community Management
+#### Community Management
 
 ```javascript
 // --- Create a new one and add description
@@ -1812,7 +1784,7 @@ const community = await sock.communityGetInviteInfo('ABC123456789')
 console.log('👥 Got community info from invite code', ':', community)
 ```
 
-#### 👤 Profile Management
+#### Profile Management
 
 ```javascript
 // --- Get user profile picture
@@ -1877,7 +1849,7 @@ const profile = await sock.getBusinessProfile(jid)
 console.dir(profile, { depth: null })
 ```
 
-#### 🛒 Business Management
+#### Business Management
 
 ```javascript
 // --- Create a new product
@@ -1956,7 +1928,7 @@ sock.addOrEditQuickReply({
 sock.removeQuickReply(timestamp)
 ```
 
-#### 🔐 Privacy Management
+#### Privacy Management
 
 ```javascript
 // --- Update last seen privacy
@@ -1998,7 +1970,7 @@ sock.updateDefaultDisappearingMode(86400)
 sock.updateDisableLinkPreviewsPrivacy(true)
 ```
 
-#### 📡 Events
+#### Events
 
 ```javascript
 sock.ev.on('connection.update', async (update) => {})
@@ -2036,42 +2008,42 @@ sock.ev.on('newsletter-settings.update', (update) => {})
 sock.ev.on('settings.update', (update) => {})
 ```
 
-### 🔗 Links
+## Links
 
-- **Repository** &mdash; https://github.com/marrspace/nix408
-- **Issues** &mdash; https://github.com/marrspace/nix408/issues
-- **Upstream fork** &mdash; https://github.com/itsliaaa/baileys
-- **Original Baileys** &mdash; https://github.com/WhiskeySockets/Baileys
+- **Repository** — https://github.com/marrspace/nix408
+- **Issues** — https://github.com/marrspace/nix408/issues
+- **Upstream fork** — https://github.com/itsliaaa/baileys
+- **Original Baileys** — https://github.com/WhiskeySockets/Baileys
 
-### 📦 Fork Base
+## Lineage
 
-`nix408` &rarr; [@itsliaaa/baileys](https://github.com/itsliaaa/baileys) &rarr;
+`nix408` → [@itsliaaa/baileys](https://github.com/itsliaaa/baileys) →
 [WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys)
 
-### 📣 Credits
+## Credits
 
-nix408 is a fork. Everything below belongs to the people who built the foundation &mdash;
+nix408 is a fork. Everything below belongs to the people who built the foundation —
 please keep it intact.
 
-**Original Baileys** &mdash; maintained by [WhiskeySockets](https://github.com/WhiskeySockets)
+**Original Baileys** — maintained by [WhiskeySockets](https://github.com/WhiskeySockets)
 and contributors:
 
 - [purpshell](https://github.com/purpshell)
 - [jlucaso1](https://github.com/jlucaso1)
 - [adiwajshing](https://github.com/adiwajshing)
 
-**Protocol Buffer definitions** &mdash; maintained by
+**Protocol Buffer definitions** — maintained by
 [WPP Connect](https://github.com/wppconnect-team) via
 [`wa-proto`](https://github.com/wppconnect-team/wa-proto).
 
-**Upstream fork** &mdash; additional enhancements and modifications by
+**Upstream fork** — additional enhancements and modifications by
 [Lia Wynn](https://github.com/itsliaaa) ([@itsliaaa/baileys](https://github.com/itsliaaa/baileys)).
 
-**Special thanks** &mdash; [itsreimau](https://github.com/itsreimau) for the `updateBlockStatus` fix.
+**Special thanks** — [itsreimau](https://github.com/itsreimau) for the `updateBlockStatus` fix.
 
 <!-- Please do not replace the upstream names above with yours. It's disrespectful. -->
 
 **nix408** is maintained by [marrspace](https://github.com/marrspace).
 
 > [!CAUTION]
-> ⚠️ **Modification, removal, or misrepresentation of these credits is strictly prohibited. Any redistribution or fork must preserve this section in its original form without exception.**
+> **Modification, removal, or misrepresentation of these credits is strictly prohibited. Any redistribution or fork must preserve this section in its original form without exception.**
