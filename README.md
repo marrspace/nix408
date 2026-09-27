@@ -767,130 +767,216 @@ nix.sendMessage(jid, {
 
 #### AI Rich messages
 
-`richResponse` builds a `richResponseMessage`, the structured reply format WhatsApp uses for
-AI answers. It renders on WhatsApp Web, Desktop and iOS. On Android it shows in channels only,
-for now.
+An AI Rich reply is the card-style message WhatsApp shows for AI answers — a title, some text,
+maybe a table or a code block, and source chips at the bottom. You have seen it when Meta AI
+replies to you. nix408 can send the same thing.
 
-You pass an array of submessages and nix408 wraps each one in the right proto type. The order
-of the array is the order on screen.
+Think of it as a stack of blocks. You give nix408 a list of blocks, and it stacks them top to
+bottom in the order you wrote them. Each block is a small object that says what it is and what
+it holds.
 
-| Submessage field | Renders as |
-| --- | --- |
-| `text` | A paragraph |
-| `code` + `language` | A syntax-highlighted code block |
-| `table` + `title` | A table with an optional heading row |
-| `links` | Text with inline citation sources |
-| `inlineImage` | An image inside the reply |
-| `latex` | A LaTeX expression |
-| `items` | A carousel of content items |
+> [!NOTE]
+> Where it shows up: WhatsApp Web, Desktop and iOS. On Android it currently only renders inside
+> Channels, not normal chats. That is a WhatsApp limitation, not a nix408 one.
 
-`disclaimerText` sets the small print under the message. `headerText`, `contentText` and
-`footerText` are shortcuts for a plain header, body and footer when you do not need the full
-array.
+##### The mental model
 
-##### Code block (with HTML)
-
-Pass the code as a string and nix408 tokenizes it for you. Any language in the table at the
-bottom of this section works, `html` included.
+One reply is a list. Every item in the list is one block. This reply has three blocks:
 
 ```javascript
 nix.sendMessage(jid, {
-   disclaimerText: 'Rendered by nix408',
-   headerText: 'A small HTML page',
-   contentText: '---',
-   language: 'html',
-   code: `<section class="card">
-  <h1>nix408</h1>
-  <p>WhatsApp Web automation for Node.js.</p>
-</section>`
+   richResponse: [
+      { text: 'Hello from nix408' },                 // block 1: a paragraph
+      { title: 'Sizes', table: [['a', 'b'], ['1', '2']] }, // block 2: a table
+      { text: 'That is all.' }                        // block 3: a paragraph
+   ]
 })
 ```
 
-If you already have tokens, pass them yourself instead of a string:
+Order matters. Block 1 shows first, then block 2, then block 3. That is the whole idea.
+
+##### The blocks you can use
+
+Pick a block by the key you put inside it. You can mix any of them, in any order, as many times
+as you want.
+
+| Block | Key you write | What appears |
+| --- | --- | --- |
+| Paragraph | `text` | A line of text (Markdown works: `**bold**`, `# heading`, lists) |
+| Code | `language` + `code` | A syntax-highlighted code block |
+| Table | `title` + `table` | A table with an optional heading row |
+| Citations | `text` + `links` | A paragraph with numbered source chips |
+| Image | `inlineImage` | An image inside the reply |
+| LaTeX | `latex` | A math formula |
+| Carousel | `items` | A row of swipeable content cards |
+
+##### Paragraph
+
+The simplest block. Markdown is supported, so `**bold**`, `# Heading`, `- list` and links all
+work.
+
+```javascript
+nix.sendMessage(jid, {
+   richResponse: [
+      { text: '# Daily report' },
+      { text: 'Everything is **green**. No incidents overnight.' }
+   ]
+})
+```
+
+##### Code block
+
+Pass the code as a plain string. nix408 tokenizes it for you — it figures out which words are
+keywords, strings and numbers so WhatsApp can colour them.
+
+```javascript
+nix.sendMessage(jid, {
+   richResponse: [
+      { text: 'A small HTML page' },
+      {
+         language: 'html',
+         code: `<section class="card">
+  <h1>nix408</h1>
+  <p>WhatsApp Web automation for Node.js.</p>
+</section>`
+      }
+   ]
+})
+```
+
+Already have tokens from somewhere else? Pass an array instead of a string:
 
 ```javascript
 import { tokenizeCode } from 'nix408'
 
-const language = 'html'
-const code = '<p>Hello</p>'
-
 nix.sendMessage(jid, {
-   disclaimerText: 'Tokenized by hand',
-   richResponse: [{
-      text: 'Markup below'
-   }, {
-      language,
-      code: tokenizeCode(code, language)
-   }]
+   richResponse: [
+      { text: 'Markup below' },
+      { language: 'html', code: tokenizeCode('<p>Hello</p>', 'html') }
+   ]
 })
 ```
+
+Supported languages: `css html javascript typescript python golang rust c c# c++ bash bat powershell`.
 
 ##### Table
 
-A table is an array of rows. The first row is the heading unless you set `noHeading: true`.
-Every row is an array of cells, and every row should have the same number of cells.
+A table is just an array of rows, and each row is an array of cells. The first row becomes the
+heading — unless you set `noHeading: true`.
 
 ```javascript
 nix.sendMessage(jid, {
-   disclaimerText: 'Rendered by nix408',
-   headerText: '## Runtime comparison',
-   contentText: '---',
-   title: 'Node.js, Bun and Deno',
-   table: [
-      ['', 'Node.js', 'Bun', 'Deno'],
-      ['Engine', 'V8', 'JavaScriptCore', 'V8'],
-      ['Startup', 'slow', 'fast', 'fast'],
-      ['npm support', 'yes', 'yes', 'partial']
-   ],
-   noHeading: false, // --- Optional, set true to render every row as data
-   footerText: 'Source: project docs'
+   richResponse: [
+      { text: '## Runtime comparison' },
+      {
+         title: 'Node.js, Bun and Deno',
+         table: [
+            ['', 'Node.js', 'Bun', 'Deno'],   // heading row
+            ['Engine', 'V8', 'JavaScriptCore', 'V8'],
+            ['Startup', 'slow', 'fast', 'fast'],
+            ['npm support', 'yes', 'yes', 'partial']
+         ]
+      }
+   ]
 })
 ```
 
-##### Full example: text, code, table and citations in one reply
+Rules to avoid a broken table:
+
+- every row needs the same number of cells;
+- the first row is the heading unless you pass `noHeading: true`;
+- an empty string `''` gives you an empty cell (useful in the top-left corner).
+
+##### Citations (links)
+
+Add `links` to a paragraph and each entry becomes a numbered source chip. This is the "Sources"
+row you see under AI answers.
 
 ```javascript
 nix.sendMessage(jid, {
-   disclaimerText: 'Rendered by nix408',
-   richResponse: [{
-      text: 'Here is the short version.'
-   }, {
-      text: 'Runtime comparison'
-   }, {
-      title: 'Node.js, Bun and Deno',
-      table: [
-         ['', 'Node.js', 'Bun', 'Deno'],
-         ['Engine', 'V8', 'JavaScriptCore', 'V8'],
-         ['Startup', 'slow', 'fast', 'fast']
-      ]
-   }, {
-      text: 'A config file in JSON'
-   }, {
-      language: 'json',
-      code: [{ highlightType: 0, codeContent: '{ "port": 3000 }' }]
-   }, {
-      text: 'Sources',
-      links: [{
-         text: 'Node.js docs',
-         title: 'Node.js',
-         url: 'https://nodejs.org/'
-      }, {
-         text: 'Bun docs',
-         title: 'Bun',
-         url: 'https://bun.sh/'
-      }]
-   }]
+   richResponse: [
+      {
+         text: 'Read the docs for the details.',
+         links: [
+            { text: 'Node.js docs', title: 'Node.js', url: 'https://nodejs.org/' },
+            { text: 'Bun docs', title: 'Bun', url: 'https://bun.sh/' }
+         ]
+      }
+   ]
 })
 ```
 
-##### Supported languages
+##### Everything in one reply
 
-`tokenizeCode` ships keyword sets for these languages:
+Blocks stack, so a realistic answer mixes several of them:
 
+```javascript
+nix.sendMessage(jid, {
+   disclaimerText: 'Rendered by nix408',   // small print under the whole card
+   richResponse: [
+      { text: 'Here is the short version.' },
+      { text: 'Runtime comparison' },
+      {
+         title: 'Node.js, Bun and Deno',
+         table: [
+            ['', 'Node.js', 'Bun', 'Deno'],
+            ['Engine', 'V8', 'JavaScriptCore', 'V8'],
+            ['Startup', 'slow', 'fast', 'fast']
+         ]
+      },
+      { text: 'A config file in JSON' },
+      { language: 'json', code: [{ highlightType: 0, codeContent: '{ "port": 3000 }' }] },
+      {
+         text: 'Sources',
+         links: [
+            { text: 'Node.js docs', title: 'Node.js', url: 'https://nodejs.org/' },
+            { text: 'Bun docs', title: 'Bun', url: 'https://bun.sh/' }
+         ]
+      }
+   ]
+})
 ```
-css  html  javascript  typescript  python  golang  rust
-c  c#  c++  bash  bat  powershell
+
+##### The shortcut form
+
+If your reply is simply a header, a body and a footer, you do not need the array. These three
+keys build the same blocks for you:
+
+```javascript
+nix.sendMessage(jid, {
+   headerText: '# Report',
+   contentText: 'All systems operational.',
+   footerText: 'Updated just now',
+   disclaimerText: 'Rendered by nix408'
+})
 ```
+
+Add `code`, `table` or `links` next to them and nix408 places the block in the right spot
+(`code` goes after the content, `links` after that, `table` just before the footer — the
+fixed order in the list above). Use the shortcut for simple replies, the `richResponse` array
+when you need exact control.
+
+##### What happens under the hood
+
+You do not need any of this to send a reply — nix408 fills it in. It is here so the raw shape in
+the [experimental section](#ai-rich-raw-html) makes sense.
+
+- Your blocks become `submessages[]` inside a `richResponseMessage`.
+- The same blocks are also written to `unifiedResponse.data` as JSON, which is what WhatsApp
+  actually renders. nix408 keeps the two in sync.
+- The message is wrapped in `botForwardedMessage` with a `botMetadata` block and a fixed
+  verification signature, because WhatsApp only accepts AI Rich replies that look bot-forwarded.
+- A `biz` node is attached so the card renders.
+
+##### Common mistakes
+
+| Symptom | Cause |
+| --- | --- |
+| Card does not show on Android | Expected — Android only renders AI Rich in Channels for now |
+| Table looks scrambled | Rows have different cell counts |
+| First row is data, not a heading | You forgot `noHeading: true` |
+| Code has no colours | Unknown `language`; check the supported list above |
+| Nothing renders at all | The `biz` node is missing — nix408 adds it, so use `sendMessage` or the helpers |
 
 #### Status Mention
 
