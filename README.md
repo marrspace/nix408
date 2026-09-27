@@ -1524,8 +1524,80 @@ These helpers return a message object. Pass it straight to `sendMessage` (the ke
 
 #### AI Rich: raw HTML
 
-Renders arbitrary HTML inside an AI Rich reply. WhatsApp shows it as a card with the HTML payload,
-plus source chips for the domains you list in `trustedSources`.
+An AI Rich HTML reply is a `richResponseMessage` wrapped in a `botForwardedMessage`. The card
+itself is the `payload` string below — everything else is scaffolding WhatsApp requires and you
+should not touch. Change the HTML, keep the rest.
+
+```javascript
+import { randomUUID } from 'crypto'
+import { proto } from 'nix408/WAProto'
+
+const html = '<section class="card"><h1>Status</h1><p>All systems up.</p></section>'
+
+const message = {
+   messageContextInfo: {
+      botMetadata: {
+         // nix408: fills proofs[] with a signature + certificate chain for you
+         verificationMetadata: {
+            proofs: [{
+               version: 1,
+               useCase: 1,
+               signature: /* Uint8Array */ undefined,
+               certificateChain: [/* Uint8Array */]
+            }]
+         }
+      }
+   },
+   botForwardedMessage: {
+      message: {
+         richResponseMessage: {
+            messageType: proto.AIRichResponseMessageType.AI_RICH_RESPONSE_TYPE_STANDARD,
+            submessages: [{ messageType: 2, messageText: '' }],
+            unifiedResponse: {
+               data: Buffer.from(JSON.stringify({
+                  response_id: randomUUID(),
+                  sections: [{
+                     view_model: {
+                        primitive: {
+                           __typename: 'GenAIaeacdsnwHtmlPrimitive',
+                           payload: html,                     // <-- the only part you change
+                           trusted_sources: ['marrlabs.my.id']
+                        },
+                        __typename: 'GenAISingleLayoutViewModel'
+                     }
+                  }]
+               }))
+            },
+            contextInfo: {
+               forwardingScore: 1,
+               isForwarded: true,
+               forwardedAiBotMessageInfo: { botJid: '867051314767696@bot' },
+               forwardOrigin: 4
+            }
+         }
+      }
+   }
+}
+
+await nix.relayMessage(jid, message, {
+   additionalNodes: [{
+      tag: 'biz',
+      attrs: { actual_actors: '2', host_storage: '2', privacy_mode_ts: '1788095961' },
+      content: [{
+         tag: 'interactive',
+         attrs: { type: 'native_flow', v: '1' },
+         content: [{ tag: 'native_flow', attrs: { v: '9', name: 'mixed' } }]
+      }]
+   }]
+})
+```
+
+Two things you must not change: the `botJid` (`867051314767696@bot`) and the `biz` node. Without
+the `biz` node the card does not render. nix408 now adds that node for you, so the example below
+is all you need.
+
+**The short version.** Hand the HTML to `aiRichHtml` and nix408 builds the whole structure —
+`botForwardedMessage`, the bot metadata, the signature, the `biz` node:
 
 ```javascript
 nix.sendMessage(jid, {
@@ -1548,7 +1620,7 @@ nix.sendMessage(jid, {
 | `disclaimerText` | Small print under the message |
 | `responseId` | Fixed response id; a UUID is generated when omitted |
 
-You can also call the builder directly:
+Or build it yourself and relay it:
 
 ```javascript
 import { prepareAiRichHtml } from 'nix408/Utils'
@@ -1556,6 +1628,20 @@ import { prepareAiRichHtml } from 'nix408/Utils'
 const message = prepareAiRichHtml({ html: '<p>hi</p>' })
 await nix.relayMessage(jid, message, {})
 ```
+
+##### What nix408 adds for you
+
+`prepareAiRichHtml` and the other AI Rich helpers fill in the parts the raw shape above leaves
+blank:
+
+- the `botForwardedMessage` wrapper and `messageContextInfo.botMetadata`;
+- a `verificationMetadata.proofs[]` entry with a random signature and certificate chain
+  (`botMetadataSignature()` / `botMetadataCertificate()`), so you never paste a fixed one;
+- a `botResponseId` that matches the `response_id` inside `unifiedResponse`;
+- the `biz` → `native_flow` (`v: 9`, `name: mixed`) node, injected automatically because
+  `shouldIncludeBizBinaryNode` recognises `richResponseMessage`;
+- the group `senderKeyDistributionMessage` (SKDM), which the socket adds when it encrypts for a
+  group. You only pass it yourself when you call `relayMessage` with a hand-written payload.
 
 #### AI Rich: image grid and entity card
 
@@ -1636,13 +1722,45 @@ of `surface` when you already have the JSON string.
 
 #### Raw experimental messages
 
-Every helper above is a thin wrapper over `relayMessage`. If you would rather send the object
-yourself, the `raw: true` flag on `sendMessage` skips the builder entirely:
+Every helper above is a thin wrapper over `relayMessage`. When you send the object yourself, you
+also own the parts the helpers normally fill in:
+
+- **`additionalNodes`** — extra binary nodes attached to the stanza. AI Rich cards need the
+  `biz` node with a nested `native_flow` (`v: 9`, `name: mixed`), otherwise the card stays blank.
+  `sendMessage` adds it for you now; with a raw `relayMessage` you pass it in the third argument.
+- **`senderKeyDistributionMessage`** — the group SKDM. `sendMessage` builds it while encrypting;
+  a hand-written `relayMessage` payload has to carry it. Leave `groupId` as `"@g.us"`.
+- **`botMetadata`** — `botResponseId`, `messageDisclaimerText` and the `verificationMetadata`
+  proofs. `prepareAiRichHtml` generates these; for a raw payload you supply them.
 
 ```javascript
 await nix.relayMessage(jid, {
-   stickerPackMessage: { /* ... */ }
-}, {})
+   stickerPackMessage: {
+      stickers: [{ fileName: 'sticker.webp', mimetype: 'image/webp', isAnimated: false, emojis: [''] }],
+      stickerPackId: 'Pack_' + Date.now().toString(16),
+      name: 'My pack',
+      publisher: 'nix408'
+   }
+}, {
+   additionalNodes: [{
+      tag: 'biz',
+      attrs: { actual_actors: '2', host_storage: '2', privacy_mode_ts: `${Date.now() / 1000 | 0}` },
+      content: [{
+         tag: 'interactive',
+         attrs: { type: 'native_flow', v: '1' },
+         content: [{ tag: 'native_flow', attrs: { v: '9', name: 'mixed' } }]
+      }]
+   }]
+})
+```
+
+`raw: true` on `sendMessage` skips the builder when the object is already in final shape:
+
+```javascript
+await nix.sendMessage(jid, {
+   raw: true,
+   ...yourRawMessage
+})
 ```
 
 <p align="right"><a href="#nix408">↑ back to top</a></p>
