@@ -6,3 +6,6 @@ coverage/
 .env
 .env.*
 *.tsbuildinfo
+# repo uses yarn (see packageManager); npm's lockfile is not tracked
+package-lock.json
+yarn.lock
