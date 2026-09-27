@@ -1,80 +1,113 @@
-# 🌱 nix408
+<div align="center">
 
-<p align="center">
-   Enhanced Baileys v7 with fixes for newsletter media uploads, plus support for interactive messages, albums, and additional message types.
-   <br><br>
-   <a href="https://github.com/marrspace/nix408">
-      <img src="https://img.shields.io/github/stars/marrspace/nix408?style=for-the-badge&logo=github"/>
-   </a>
-   <a href="LICENSE">
-      <img src="https://img.shields.io/badge/license-MIT-blue?style=for-the-badge"/>
-   </a>
-   <a href="https://nodejs.org">
-      <img src="https://img.shields.io/badge/node-%3E%3D20-339933?logo=node.js&labelColor=green&logoColor=white&style=for-the-badge"/>
-   </a>
-   <a href="#">
-      <img src="https://img.shields.io/badge/ESM-only?logo=javascript&labelColor=yellow&logoColor=black&style=for-the-badge"/>
-   </a>
-</p>
+# nix408
 
-> **nix408** is a fork of [nix408](https://github.com/marrspace/nix408), which itself is based on
-> [WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys).
-> Full attribution is preserved in the [Credits](#-credits) section at the bottom.
+**WhatsApp Web automation, refined.**
 
-### ✨ Highlights
+A maintained fork of [@itsliaaa/baileys](https://github.com/itsliaaa/baileys) &rarr;
+[WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys), extended with the message
+types WhatsApp actually ships today.
 
-This fork designed for production use with a focus on clarity and safety:
+<br>
 
-- 🚫 No obfuscation. Easy to read and audit.
-- 🚫 No auto-follow channel (newsletter) behavior.
+<a href="https://github.com/marrspace/nix408">
+  <img src="https://img.shields.io/github/stars/marrspace/nix408?style=for-the-badge&logo=github&labelColor=0b0f14&color=22d3ee"/>
+</a>
+<a href="LICENSE">
+  <img src="https://img.shields.io/badge/license-MIT-22d3ee?style=for-the-badge&labelColor=0b0f14"/>
+</a>
+<a href="https://nodejs.org">
+  <img src="https://img.shields.io/badge/node-%3E%3D20-3c873a?style=for-the-badge&logo=node.js&logoColor=white&labelColor=0b0f14"/>
+</a>
+<a href="#">
+  <img src="https://img.shields.io/badge/module-ESM-f7df1e?style=for-the-badge&logo=javascript&logoColor=black&labelColor=0b0f14"/>
+</a>
+<a href="#-credits">
+  <img src="https://img.shields.io/badge/fork%20of-Baileys-8b5cf6?style=for-the-badge&labelColor=0b0f14"/>
+</a>
 
-> [!IMPORTANT]
-> Hi everyone,
->
-> I want to clarify two separate attribution issues regarding packages derived from this fork.
->
-> 1. Direct redistribution of my modifications without attribution
->
-> The following packages are operated by the same individual under multiple npm accounts:
->
-> - [@nuisockets](https://www.npmjs.com/package/@nuisockets/baileys)
-> - [@nuiisatoru](https://www.npmjs.com/package/@nuiisatoru/baileys)
-> - [@nuiisweetberry](https://www.npmjs.com/package/@nuiisweetberry/baileys)
-> - [@nuiisweety](https://www.npmjs.com/package/@nuiisweety/baileys)
->
-> These packages redistribute files and modifications originating from this fork while removing contributor credits and modification notes.
->
-> 2. Rebranded republishes of this fork
->
-> - [@lumina-md](https://www.npmjs.com/package/@lumina-md/baileys)
-> - [@sairidev](https://www.npmjs.com/package/@sairidev/baileys-new)
-> - [@lordmega/baileys](https://www.npmjs.com/package/@lordmega/baileys)
-> - [phantom-baileys](https://www.npmjs.com/package/phantom-baileys)
-> - [nexora-baileys](https://www.npmjs.com/package/nexora-baileys)
->
-> These packages primarily repackage or republish this fork under different names while failing to preserve proper attribution, credits, or modification notes.
-> 
-> To be clear, I am **NOT** the original maintainer of Baileys. Full credit and respect belong to:
->
-> https://github.com/WhiskeySockets/Baileys
->
-> **Forking is completely acceptable. Removing attribution, contributor credits, or modification history is not.**
->
-> Please report if necessary.
->
-> Thank you. 🤍
+</div>
 
-> [!NOTE]
-> 📄 This project is maintained with limited scope and is not intended to replace upstream Baileys.
->
-> 😞 And, really sorry for my bad english.
+---
+
+## About
+
+**nix408** is our take on Baileys. It keeps the part that matters &mdash; a battle-tested
+implementation of the WhatsApp Web protocol &mdash; and pushes it further:
+
+- first-class support for **interactive messages, albums, rich responses and payments**;
+- a **readable, auditable codebase** (no obfuscation, no hidden behaviour);
+- **documentation with a working example for every feature**.
+
+We don't pretend to be the original. nix408 is a fork, and we say so plainly: the upstream
+authors are credited in full at the bottom of this file and in [LICENSE](LICENSE).
+
+> **If you fork nix408, keep the credits.** That is the whole deal.
+
+## Why nix408?
+
+| | |
+|---|---|
+| 🧩 | **One library for every message type** &mdash; buttons, lists, native flows, carousels, albums, polls, payments, rich responses, code blocks, tables and inline entities. |
+| 🔍 | **Readable by design** &mdash; open any file and understand it. No obfuscation, no surprises. |
+| 📰 | **Newsletter media, fixed** &mdash; sending media to channels no longer fails upstream. |
+| 🛡️ | **Safer process handling** &mdash; FFmpeg is invoked with `spawn`, never `exec`. |
+| 🪶 | **Heavy deps stay optional** &mdash; image/audio backends are peer dependencies; install only what you use. |
+| 📚 | **Docs that ship examples** &mdash; every feature below has a copy-paste snippet. |
+| 🚫 | **No auto-follow** &mdash; nix408 never silently follows a newsletter for you. |
+
+## What's inside
+
+| Feature | Highlights |
+|---|---|
+| 💬 **Interactive messages** | Buttons, lists, native flows, hydrated templates, carousels |
+| 🖼️ **Albums** | Multiple images/videos in a single album message |
+| ✨ **Rich responses** | Structured rich replies with citations and sources |
+| 🧾 **Rich text** | Code blocks, tables, inline entities |
+| 💳 **Payments** | Payment requests, invites, orders, invoices |
+| 📦 **Sticker packs** | Multi-sticker packs with cover and metadata |
+| 📊 **Polls & events** | Native polls, calendar events, group invites |
+| 👁️ **Ephemeral / view-once** | Wrapper flags incl. view-once V2 and its extension |
+| 📣 **Newsletters** | Management API + the media upload fix |
+| 👥 **Groups & communities** | Full management APIs |
+
+## Requirements
+
+- **Node.js &ge; 20** &mdash; enforced at install time by `engine-requirements.js`.
+- **ESM first** &mdash; `"type": "module"`. CommonJS `require()` is supported and tested on Node 24.
+
+## Quick start
+
+```bash
+npm install github:marrspace/nix408#main
+```
+
+```javascript
+import { makeWASocket, useMultiFileAuthState } from 'nix408'
+
+const { state, saveCreds } = await useMultiFileAuthState('auth_info')
+const sock = makeWASocket({ auth: state })
+
+sock.ev.on('creds.update', saveCreds)
+sock.ev.on('connection.update', ({ connection }) => {
+  if (connection === 'open') console.log('connected')
+})
+```
+
+Full walkthrough &rarr; [Connect to WhatsApp](#-connect-to-whatsapp-quick-step).
+
+## Documentation
+
+Every section below is a reference with runnable examples &mdash; jump to a topic:
 
 ### 📋 Table of Contents
-- [📋 Table of Contents](#-table-of-contents)
-- [✨ Highlights](#-highlights)
-- [🛠️ Internal Adjustments](#%EF%B8%8F-internal-adjustments)
-- [📨 Messages Handling & Compatibility](#-highlights)
-- [🧩 Additional Message Options](#-additional-message-options)
+
+- [About](#about)
+- [Why nix408?](#why-nix408)
+- [What's inside](#whats-inside)
+- [Requirements](#requirements)
+- [Quick start](#quick-start)
+- [Documentation](#documentation)
 - [📥 Installation](#-installation)
    - [🧩 Import (ESM & CJS)](#-import-esm--cjs)
 - [🌐 Connect to WhatsApp (Quick Step)](#-connect-to-whatsapp-quick-step)
@@ -144,64 +177,30 @@ This fork designed for production use with a focus on clarity and safety:
    - [🛒 Business Management](#-business-management)
    - [🔐 Privacy Management](#-privacy-management)
    - [📡 Events](#-events)
-- [🚀 Try the Bot](#-try-the-bot)
+- [🔗 Links](#-links)
 - [📦 Fork Base](#-fork-base)
 - [📣 Credits](#-credits)
 
-### 🛠️ Internal Adjustments
-- 🖼️ Fixed an issue where media could not be sent to newsletters due to an upstream issue.
-- 📁 Reintroduced [`makeInMemoryStore`](#%EF%B8%8F-implementing-data-store) with a minimal ESM adaptation and small adjustments for Baileys v7.
-- 📦 Switched FFmpeg execution from `exec` to `spawn` for safer process handling.
-- 🗃️ Added [`@napi-rs/image`](https://www.npmjs.com/package/@napi-rs/image) as a supported image processing backend in [`getImageProcessingLibrary()`](#%EF%B8%8F-image-processing), offering a balance between performance and compatibility.
-
-### 📨 Messages Handling & Compatibility
-- 📩 Expanded messages support for:
-   - 🖼️ [Album Message](#%EF%B8%8F-album-image--video)
-   - 👤 [Group Status Message](#%E2%80%8D%E2%80%8D-group-status)
-   - 👉🏻 [Interactive Message](#-sending-interactive-messages) (buttons, lists, native flows, templates, carousels).
-   - 🎞️ [Status Mention Message](#%EF%B8%8F-status-mention)
-   - 📦 [Sticker Pack Message](#-sticker-pack)
-   - ✨ [Rich Response Message](#-rich-response) **[NEW]**
-   - 🧾 [Message with Code Blocks](#-message-with-code-block) **[NEW]**
-   - [🌏 Message with Inline Entities](#-message-with-inline-entities) **[NEW]**
-   - 📋 [Message with Table](#-message-with-table) **[NEW]**
-   - 💳 [Payment-related Message](#-sending-payment-messages) (payment requests, invites, orders, invoices).
-- 📰 Simplified sending messages with ad thumbnail using [`externalAdReply`](#-external-ad-reply), without requiring manual `contextInfo`.
-- 💭 Added support for quoting messages inside channel (newsletter). **[NEW]**
-- 🎀 Added support for [custom button icon](#%EF%B8%8F-interactive). **[NEW]**
-
-### 🧩 Additional Message Options
-- 👁️ Added optional boolean flags for message handling:  
-   - 🤖 [`ai`](#-ai-icon) - AI icon on message
-   - 📣 [`mentionAll`](#-mention) - Mention all group participants without requiring their JIDs in `mentions` or `mentionedJid` **[NEW]**
-   - 🔧 [`ephemeral`](#-ephemeral), [`groupStatus`](#%E2%80%8D%E2%80%8D-group-status), [`isLottie`](#-lottie-sticker), [`spoiler`](#-spoiler), [`viewOnce`](#%EF%B8%8F-view-once), [`viewOnceV2`](#%EF%B8%8F-view-once-v2), [`viewOnceV2Extension`](#%EF%B8%8F-view-once-v2-extension), [`interactiveAsTemplate`](#%EF%B8%8F-interactive) - Message wrappers
-   - 🔒 [`secureMetaServiceLabel`](#%EF%B8%8F-secure-meta-service-label) - Secure meta service label on message **[NEW]**
-   - 📄 [`raw`](#-raw) - Build your message manually **(DO NOT USE FOR EXPLOITATION)**
-
 ### 📥 Installation
 
-- 📄 Via `package.json`
-
-```json
-# NPM
-"dependencies": {
-   "nix408": "latest"
-}
-
-# GitHub
-"dependencies": {
-   "nix408": "github:marrspace/nix408#main"
-}
-```
+nix408 is distributed through GitHub. It is **not** published on npm.
 
 - ⌨️ Via terminal
 
 ```bash
-# NPM
-npm i nix408@latest
+npm install github:marrspace/nix408#main
+# or
+yarn add github:marrspace/nix408#main
+# or
+pnpm add github:marrspace/nix408#main
+```
 
-# GitHub
-npm i github:marrspace/nix408#main
+- 📄 Via `package.json`
+
+```json
+"dependencies": {
+   "nix408": "github:marrspace/nix408#main"
+}
 ```
 
 #### 🧩 Import (ESM & CJS)
@@ -2037,39 +2036,42 @@ sock.ev.on('newsletter-settings.update', (update) => {})
 sock.ev.on('settings.update', (update) => {})
 ```
 
-### 🚀 Try the Bot
+### 🔗 Links
 
-A fast, lightweight, and modular WhatsApp bot built with [nix408](https://github.com/marrspace/nix408).
-Perfect for managing groups, moderating chats, and adding fun with quiz games and handy tools.
-
-👉🏻 [nix408](https://github.com/marrspace/nix408)
-
-A lightweight yet powerful Baileys wrapper designed to simplify development while extending support for additional message types and WhatsApp features.
-
-👉🏻 [nix408](https://github.com/marrspace/nix408)
+- **Repository** &mdash; https://github.com/marrspace/nix408
+- **Issues** &mdash; https://github.com/marrspace/nix408/issues
+- **Upstream fork** &mdash; https://github.com/itsliaaa/baileys
+- **Original Baileys** &mdash; https://github.com/WhiskeySockets/Baileys
 
 ### 📦 Fork Base
 
-This fork is based on [Baileys (GitHub)](https://github.com/WhiskeySockets/Baileys)
+`nix408` &rarr; [@itsliaaa/baileys](https://github.com/itsliaaa/baileys) &rarr;
+[WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys)
 
 ### 📣 Credits
 
-nix408 is a fork — the credits below belong to the upstream projects it is built on.
+nix408 is a fork. Everything below belongs to the people who built the foundation &mdash;
+please keep it intact.
 
-This fork uses Protocol Buffer definitions maintained by [WPP Connect](https://github.com/wppconnect-team) via [`wa-proto`](https://github.com/wppconnect-team/wa-proto)
+**Original Baileys** &mdash; maintained by [WhiskeySockets](https://github.com/WhiskeySockets)
+and contributors:
 
-Full credit is attributed to the original maintainers and contributors of Baileys:
 - [purpshell](https://github.com/purpshell)
 - [jlucaso1](https://github.com/jlucaso1)
 - [adiwajshing](https://github.com/adiwajshing)
 
-<!-- Please do not replace my name with yours. It's disrespectful. -->
+**Protocol Buffer definitions** &mdash; maintained by
+[WPP Connect](https://github.com/wppconnect-team) via
+[`wa-proto`](https://github.com/wppconnect-team/wa-proto).
 
-This project (nix408) is maintained by [marrspace](https://github.com/marrspace).
+**Upstream fork** &mdash; additional enhancements and modifications by
+[Lia Wynn](https://github.com/itsliaaa) ([@itsliaaa/baileys](https://github.com/itsliaaa/baileys)).
 
-This fork builds on additional enhancements and modifications by [Lia Wynn](https://github.com/itsliaaa) (@itsliaaa/baileys).
+**Special thanks** &mdash; [itsreimau](https://github.com/itsreimau) for the `updateBlockStatus` fix.
 
-Special thanks to [itsreimau](https://github.com/itsreimau) for the fix to the `updateBlockStatus` implementation.
+<!-- Please do not replace the upstream names above with yours. It's disrespectful. -->
+
+**nix408** is maintained by [marrspace](https://github.com/marrspace).
 
 > [!CAUTION]
 > ⚠️ **Modification, removal, or misrepresentation of these credits is strictly prohibited. Any redistribution or fork must preserve this section in its original form without exception.**
