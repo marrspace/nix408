@@ -2,16 +2,15 @@
 
 # nix408
 
-**WhatsApp Web automation, refined.**
+WhatsApp Web automation for Node.js.
 
-A maintained fork of [`@itsliaaa/baileys`](https://github.com/itsliaaa/baileys) →
-[`WhiskeySockets/Baileys`](https://github.com/WhiskeySockets/Baileys), extended with the message
-types WhatsApp actually ships today.
+A fork of [@itsliaaa/baileys](https://github.com/itsliaaa/baileys), which itself forks
+[WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys). It keeps the WhatsApp Web
+protocol implementation and adds the message types WhatsApp ships today.
 
 [![repo](https://img.shields.io/badge/repo-marrspace%2Fnix408-0b0f14?style=flat-square&logo=github)](https://github.com/marrspace/nix408)
 [![license](https://img.shields.io/badge/license-MIT-22d3ee?style=flat-square)](LICENSE)
 [![node](https://img.shields.io/badge/node-%E2%89%A520-3c873a?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
-[![module](https://img.shields.io/badge/module-ESM%20%2B%20CJS-8957e5?style=flat-square)](#requirements)
 
 </div>
 
@@ -19,64 +18,62 @@ types WhatsApp actually ships today.
 npm install github:marrspace/nix408#main
 ```
 
-[Quick start](#quick-start) &nbsp;·&nbsp; [Documentation](#documentation) &nbsp;·&nbsp; [Lineage](#lineage) &nbsp;·&nbsp; [Credits](#credits)
+[Quick start](#quick-start) &nbsp;·&nbsp; [Documentation](#documentation) &nbsp;·&nbsp; [Credits](#credits)
 
 ---
 
 ## About
 
-**nix408** is our take on Baileys. It keeps the part that matters — a battle-tested
-implementation of the WhatsApp Web protocol — and pushes it further:
+nix408 is a Baileys fork. The protocol work is upstream; what we add is the message
+types that upstream does not send yet:
 
-- first-class support for **interactive messages, albums, rich responses and payments**;
-- a **readable, auditable codebase** (no obfuscation, no hidden behaviour);
-- **documentation with a working example for every feature**.
+- interactive messages, albums, rich responses and payments;
+- a codebase you can actually read, with no obfuscation;
+- a runnable example for every feature in this file.
 
-We don't pretend to be the original. nix408 is a fork, and we say so plainly: the upstream
-authors are credited in full at the bottom of this file and in [LICENSE](LICENSE).
+It is a fork, and this file says so. The upstream authors are credited at the bottom and
+in [LICENSE](LICENSE).
 
-> **If you fork nix408, keep the credits.** That is the whole deal.
+> If you fork nix408, keep the credits. That is the whole deal.
 
 ## At a glance
 
 | | |
 | --- | --- |
-| **Package** | `nix408` — GitHub only, not on npm |
-| **Runtime** | Node.js ≥ 20, ESM first (`require()` also supported) |
-| **Socket variable** | `nix` in every example — `const nix = makeWASocket(...)` |
-| **Message types** | Text, media, albums, buttons, lists, flows, polls, payments, rich responses |
-| **Extras** | Newsletter management, groups, communities, profiles, privacy, business |
-| **Auth** | Multi-file, single-file and SQLite auth state |
+| Package | `nix408`, installed from GitHub (not on npm) |
+| Runtime | Node.js ≥ 20, ESM first (`require()` works too) |
+| Socket variable | `nix` in every example: `const nix = makeWASocket(...)` |
+| Message types | Text, media, albums, buttons, lists, flows, polls, payments, rich responses |
+| Management | Newsletters, groups, communities, profiles, privacy, business |
+| Auth | Multi-file, single-file and SQLite auth state |
 
-## Why nix408?
+## Why nix408
 
-- **One library for every message type** — buttons, lists, native flows, carousels, albums, polls, payments, rich responses, code blocks, tables and inline entities.
-- **Readable by design** — open any file and understand it. No obfuscation, no surprises.
-- **Newsletter media, fixed** — sending media to channels no longer fails upstream.
-- **Safer process handling** — FFmpeg is invoked with `spawn`, never `exec`.
-- **Heavy deps stay optional** — image/audio backends are peer dependencies; install only what you use.
-- **Docs that ship examples** — every feature below has a copy-paste snippet.
-- **No auto-follow** — nix408 never silently follows a newsletter for you.
+- Buttons, lists, native flows, carousels, albums, polls, payments, rich responses, code blocks, tables and inline entities all send from one library.
+- Open any file and you can follow it. No obfuscation.
+- Media upload to channels works. It did not upstream.
+- FFmpeg runs through `spawn`, not `exec`.
+- Image and audio backends are optional peer dependencies, so you install only what you use.
+- Every feature below has a snippet you can paste and run.
 
 ## What's inside
 
-| Feature | Highlights |
+| Feature | What you get |
 | --- | --- |
-| **Interactive messages** | Buttons, lists, native flows, hydrated templates, carousels |
-| **Albums** | Multiple images/videos in a single album message |
-| **Rich responses** | Structured rich replies with citations and sources |
-| **Rich text** | Code blocks, tables, inline entities |
-| **Payments** | Payment requests, invites, orders, invoices |
-| **Sticker packs** | Multi-sticker packs with cover and metadata |
-| **Polls & events** | Native polls, calendar events, group invites |
-| **Ephemeral / view-once** | Wrapper flags incl. view-once V2 and its extension |
-| **Newsletters** | Management API + the media upload fix |
-| **Groups & communities** | Full management APIs |
+| Interactive messages | Buttons, lists, native flows, hydrated templates, carousels |
+| Albums | Several images or videos in one message |
+| Rich responses | Structured replies with tables, code blocks and citations |
+| Payments | Payment requests, invites, orders, invoices |
+| Sticker packs | Multi-sticker packs with cover and metadata |
+| Polls and events | Native polls, calendar events, group invites |
+| Ephemeral / view-once | Flags, including view-once V2 and its extension |
+| Newsletters | Management API plus the media upload fix |
+| Groups and communities | Full management APIs |
 
 ## Requirements
 
-- **Node.js ≥ 20** — enforced at install time by `engine-requirements.js`.
-- **ESM first** — `"type": "module"`. CommonJS `require()` is supported and tested on Node 24.
+- Node.js 20 or newer. `engine-requirements.js` checks this at install time.
+- ESM first: `"type": "module"`. CommonJS `require()` is tested on Node 24.
 
 ## Quick start
 
@@ -96,12 +93,12 @@ nix.ev.on('connection.update', ({ connection }) => {
 })
 ```
 
-Full walkthrough → [Connecting to WhatsApp](#connecting-to-whatsapp).
+Full walkthrough: [Connecting to WhatsApp](#connecting-to-whatsapp).
 
 ## Documentation
 
-Every section below is a reference with runnable examples. All examples use the socket variable
-**`nix`**. Use the table of contents to jump straight to a topic.
+Every section below is a reference with runnable examples. The socket variable is `nix`
+throughout. Use the table of contents to jump to a topic.
 
 <details open>
 <summary><b>Table of contents</b></summary>
@@ -126,10 +123,7 @@ Every section below is a reference with runnable examples. All examples use the 
   - [Product](#product)
   - [Poll](#poll)
   - [Button Response](#button-response)
-  - [Rich Response](#rich-response)
-  - [Message with Code Block](#message-with-code-block)
-  - [Message with Inline Entities](#message-with-inline-entities)
-  - [Message with Table](#message-with-table)
+  - [AI Rich messages](#ai-rich-messages)
   - [Status Mention](#status-mention)
 - [Sending media](#sending-media)
   - [Image](#image)
@@ -208,7 +202,7 @@ pnpm add github:marrspace/nix408#main
 // --- ESM
 import { makeWASocket } from 'nix408'
 
-// --- CJS (tested and working on Node.js 24 ✅)
+// --- CJS (works on Node.js 24)
 const { makeWASocket } = require('nix408')
 ```
 
@@ -241,17 +235,17 @@ const connectToWhatsApp = async () => {
       if (connection === 'connecting' && !nix.authState.creds.registered) {
          await delay(1500)
          const code = await nix.requestPairingCode(myPhoneNumber)
-         console.log('🔗 Pairing code', ':', code)
+         console.log('pairing code:', code)
       }
       else if (connection === 'close') {
          const shouldReconnect = new Boom(lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
-         console.log('⚠️ Connection closed because', lastDisconnect.error, ', reconnecting ', shouldReconnect)
+         console.log('connection closed:', lastDisconnect.error, 'reconnect:', shouldReconnect)
          if (shouldReconnect) {
             connectToWhatsApp()
          }
       }
       else if (connection === 'open') {
-         console.log('✅ Successfully connected to WhatsApp')
+         console.log('connected to WhatsApp')
       }
    })
 
@@ -259,9 +253,9 @@ const connectToWhatsApp = async () => {
       for (const message of messages) {
          if (!message.message) continue
 
-         console.log('🔔 Got new message', ':', message)
+         console.log('incoming message:', message)
          await nix.sendMessage(message.key.remoteJid, {
-            text: '👋🏻 Hello world'
+            text: 'hello from nix408'
          })
       }
    })
@@ -316,26 +310,26 @@ const connectToWhatsApp = async () => {
       if (connection === 'connecting' && !nix.authState.creds.registered) {
          await delay(1500)
          const code = await nix.requestPairingCode(myPhoneNumber)
-         console.log('🔗 Pairing code', ':', code)
+         console.log('pairing code:', code)
       }
       else if (connection === 'close') {
          const shouldReconnect = new Boom(lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut
-         console.log('⚠️ Connection closed because', lastDisconnect.error, ', reconnecting ', shouldReconnect)
+         console.log('connection closed:', lastDisconnect.error, 'reconnect:', shouldReconnect)
          if (shouldReconnect) {
             connectToWhatsApp()
          }
       }
       else if (connection === 'open') {
-         console.log('✅ Successfully connected to WhatsApp')
+         console.log('connected to WhatsApp')
       }
    })
 
    nix.ev.on('chats.upsert', () => {
-      console.log('✉️ Got chats', store.chats.all())
+      console.log('chats:', store.chats.all())
    })
 
    nix.ev.on('contacts.upsert', () => {
-      console.log('👥 Got contacts', Object.values(store.contacts))
+      console.log('contacts:', Object.values(store.contacts))
    })
 
    // --- Read store from file
@@ -374,7 +368,7 @@ connectToWhatsApp()
 ```javascript
 // --- Send a regular text message
 nix.sendMessage(jid, {
-   text: '👋🏻 Hello'
+   text: 'hello'
 }, {
    quoted: message
 })
@@ -383,11 +377,11 @@ nix.sendMessage(jid, {
 const urlA = 'https://github.com/marrspace/nix408'
 
 nix.sendMessage(jid, {
-   text: urlA + ' 👆🏻 Check it out!',
+   text: urlA + ' — check it out',
    linkPreview: {
       'matched-text': urlA,
-      title: '🌱 nix408',
-      description: 'Underrated Baileys Fork',
+      title: 'nix408',
+      description: 'WhatsApp Web automation',
       previewType: 0, // --- Use 1 for video playback in the link preview
       jpegThumbnail: fs.readFileSync('./path/to/image.jpg')
    }
@@ -412,11 +406,11 @@ image.height = 720
 image.width = 480
 
 nix.sendMessage(jid, {
-   text: urlB + ' 👆🏻 Check it out!',
+   text: urlB + ' — check it out',
    linkPreview: {
       'matched-text': urlB,
-      title: '🌱 nix408',
-      description: 'Underrated Baileys Fork',
+      title: 'nix408',
+      description: 'WhatsApp Web automation',
       previewType: 0,
       jpegThumbnail: fs.readFileSync('./path/to/image.jpg'),
       highQualityThumbnail: image,
@@ -436,7 +430,7 @@ nix.sendMessage(jid, {
 ```javascript
 // --- Regular mention
 nix.sendMessage(jid, {
-   text: '👋🏻 Hello @628123456789',
+   text: 'hi @628123456789',
    mentions: ['628123456789@s.whatsapp.net']
 }, {
    quoted: message
@@ -444,7 +438,7 @@ nix.sendMessage(jid, {
 
 // --- Mention all
 nix.sendMessage(jid, {
-   text: '👋🏻 Hello @all',
+   text: 'hi @all',
    mentionAll: true
 }, {
    quoted: message
@@ -457,7 +451,7 @@ nix.sendMessage(jid, {
 nix.sendMessage(jid, {
    react: {
       key: message.key,
-      text: '✨'
+      text: '👍'
    }
 })
 ```
@@ -498,14 +492,14 @@ nix.sendMessage(jid, {
 ```javascript
 const vcard = 'BEGIN:VCARD\n'
             + 'VERSION:3.0\n'
-            + 'FN:Lia Wynn\n'
-            + 'ORG:Waitress;\n'
+            + 'FN:nix408\n'
+            + 'ORG:nix408;\n'
             + 'TEL;type=CELL;type=VOICE;waid=628123456789:+62 8123 4567 89\n'
             + 'END:VCARD'
 
 nix.sendMessage(jid, {
    contacts: {
-      displayName: 'Lia Wynn',
+      displayName: 'nix408',
       contacts: [
          { vcard }
       ]
@@ -522,7 +516,7 @@ nix.sendMessage(jid, {
    location: {
       degreesLatitude: 24.121231,
       degreesLongitude: 55.1121221,
-      name: '👋🏻 I am here'
+      name: 'office'
    }
 }, {
    quoted: message
@@ -534,8 +528,8 @@ nix.sendMessage(jid, {
 ```javascript
 nix.sendMessage(jid, {
    event: {
-      name: '🎶 Meet & Mingle Party',
-      description: 'Meet & Mingle Party is a fun, casual gathering to connect, chat, and build new relationships within the community.',
+      name: 'Community meetup',
+      description: 'Monthly community meetup. Bring your questions.',
       call: 'audio', // --- Or "video", this field is optional
       startDate: new Date(Date.now() + 3600000),
       endDate: new Date(Date.now() + 28800000),
@@ -567,7 +561,7 @@ nix.sendMessage(jid, {
    groupInvite: {
       inviteCode,
       inviteExpiration: Date.now() + 86400000,
-      text: '👋🏻 Hello, we invite you to join our group.',
+      text: 'join our group',
       jid: groupJid,
       subject: groupName,
    }
@@ -585,17 +579,17 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   body: '👋🏻 Check my product here!',
+   body: 'New in the store',
    footer: 'nix408',
    product: {
       currencyCode: 'IDR',
-      description: '🛍️ Interesting product!',
+      description: 'Premium plan, lifetime access',
       priceAmount1000: 70_000_000,
       productId: randomUUID(),
       productImageCount: 1,
       salePriceAmount1000: 65_000_000,
       signedUrl: 'https://github.com/marrspace/nix408',
-      title: '📦 Starseed (Premium)',
+      title: 'Pro plan',
       url: 'https://github.com/marrspace/nix408'
    },
    businessOwnerJid: '0@s.whatsapp.net'
@@ -608,7 +602,7 @@ nix.sendMessage(jid, {
 // --- Regular poll message
 nix.sendMessage(jid, {
    poll: {
-      name: '🔥 Voting time',
+      name: 'Deploy today?',
       values: ['Yes', 'No'],
       selectableCount: 1,
       toAnnouncementGroup: false,
@@ -623,7 +617,7 @@ nix.sendMessage(jid, {
 // --- Quiz (only for newsletter)
 nix.sendMessage('1211111111111@newsletter', {
    poll: {
-      name: '🔥 Quiz',
+      name: 'Quick quiz',
       values: ['Yes', 'No'],
       correctAnswer: 'Yes',
       pollType: 1
@@ -635,7 +629,7 @@ nix.sendMessage('1211111111111@newsletter', {
 // --- Poll result
 nix.sendMessage(jid, {
    pollResult: {
-      name: '📝 Poll Result',
+      name: 'Poll results',
       votes: [{
          name: 'Nice',
          voteCount: 10
@@ -672,7 +666,7 @@ nix.sendMessage(jid, {
    type: 'plain',
    buttonReply: {
       id: '#Menu',
-      displayText: '✨ Interesting Menu'
+      displayText: 'Open menu'
    }
 }, {
    quoted: message
@@ -682,11 +676,11 @@ nix.sendMessage(jid, {
 nix.sendMessage(jid, {
    flowReply: {
       format: 0,
-      text: '💭 Response',
+      text: 'reply',
       name: 'menu_options',
       paramsJson: JSON.stringify({
          id: '#Menu',
-         description: '✨ Interesting Menu'
+         description: 'Open menu'
       })
    }
 }, {
@@ -696,8 +690,8 @@ nix.sendMessage(jid, {
 // --- Using listResponseMessage
 nix.sendMessage(jid, {
    listReply: {
-      title: '📄 See More',
-      description: '✨ Interesting Menu',
+      title: 'See more',
+      description: 'Open menu',
       id: '#Menu'
    }
 }, {
@@ -709,7 +703,7 @@ nix.sendMessage(jid, {
    type: 'template',
    buttonReply: {
       id: '#Menu',
-      displayText: '✨ Interesting Menu',
+      displayText: 'Open menu',
       index: 1
    }
 }, {
@@ -717,135 +711,138 @@ nix.sendMessage(jid, {
 })
 ```
 
-#### Rich Response
+#### AI Rich messages
 
-> [!NOTE]
-> richResponse[] is a representation of [submessages[]](https://baileys.wiki/docs/api/namespaces/proto/interfaces/IAIRichResponseSubMessage) inside richResponseMessage.
+`richResponse` builds a `richResponseMessage`, the structured reply format WhatsApp uses for
+AI answers. It renders on WhatsApp Web, Desktop and iOS. On Android it shows in channels only,
+for now.
 
-> [!TIP]
-> You can still use the original [submessages[]](https://baileys.wiki/docs/api/namespaces/proto/interfaces/IAIRichResponseSubMessage) field directly.
-> The code example below is just an implementation using a helper, not a required structure.
+You pass an array of submessages and nix408 wraps each one in the right proto type. The order
+of the array is the order on screen.
+
+| Submessage field | Renders as |
+| --- | --- |
+| `text` | A paragraph |
+| `code` + `language` | A syntax-highlighted code block |
+| `table` + `title` | A table with an optional heading row |
+| `links` | Text with inline citation sources |
+| `inlineImage` | An image inside the reply |
+| `latex` | A LaTeX expression |
+| `items` | A carousel of content items |
+
+`disclaimerText` sets the small print under the message. `headerText`, `contentText` and
+`footerText` are shortcuts for a plain header, body and footer when you do not need the full
+array.
+
+##### Code block (with HTML)
+
+Pass the code as a string and nix408 tokenizes it for you. Any language in the table at the
+bottom of this section works, `html` included.
 
 ```javascript
 nix.sendMessage(jid, {
-   disclaimerText: 'RAW submessages structure example',
-   richResponse: [{
-      text: 'Example Usage',
-   }, {
-      language: 'javascript',
-      code: [{
-         highlightType: 0,
-         codeContent: 'console.log("Hello, World!")'
-      }]
-   }, {
-      text: 'Pretty simple, right?\n'
-   }, {
-      text: 'Comparison between Node.js, Bun, and Deno',
-   }, {
-      title: 'Runtime Comparison',
-      table: [{
-         isHeading: true,
-         items: ['', 'Node.js', 'Bun', 'Deno']
-      }, {
-         isHeading: false,
-         items: ['Engine', 'V8 (C++)', 'JavaScriptCore (C++)', 'V8 (C++)']
-      }, {
-         isHeading: false,
-         items: ['Performance', '4/5', '5/5', '4/5']
-      }]
-   }, {
-      text: 'Does this help clarify the differences?'
-   }]
+   disclaimerText: 'Rendered by nix408',
+   headerText: 'A small HTML page',
+   contentText: '---',
+   language: 'html',
+   code: `<section class="card">
+  <h1>nix408</h1>
+  <p>WhatsApp Web automation for Node.js.</p>
+</section>`
 })
 ```
 
-> [!TIP]
-> You can easily add syntax highlighting by importing tokenizeCode directly from Baileys.
+If you already have tokens, pass them yourself instead of a string:
 
 ```javascript
 import { tokenizeCode } from 'nix408'
 
-const language = 'javascript'
-const code = 'console.log("Hello, World!")'
+const language = 'html'
+const code = '<p>Hello</p>'
 
 nix.sendMessage(jid, {
-   disclaimerText: 'Example of tokenizing Code Block',
+   disclaimerText: 'Tokenized by hand',
    richResponse: [{
-      text: 'Example Usage',
+      text: 'Markup below'
    }, {
       language,
       code: tokenizeCode(code, language)
-   }, {
-      text: 'Pretty simple, right?'
    }]
 })
 ```
 
-> Supported Languages: css, html, javascript, typescript, python, golang, rust, c, c#, c++, bash, bat, powershell.
+##### Table
 
-#### Message with Code Block
-
-> [!NOTE]
-> This feature already includes a built-in tokenizer with tokenizeCode.
+A table is an array of rows. The first row is the heading unless you set `noHeading: true`.
+Every row is an array of cells, and every row should have the same number of cells.
 
 ```javascript
 nix.sendMessage(jid, {
-   disclaimerText: 'Code Block',
-   headerText: '## Example Usage',
+   disclaimerText: 'Rendered by nix408',
+   headerText: '## Runtime comparison',
    contentText: '---',
-   code: 'console.log("Hello, World!")',
-   language: 'javascript',
-   footerText: 'Pretty simple, right?'
-})
-```
-
-#### Message with Inline Entities
-
-```javascript
-nix.sendMessage(jid, {
-   disclaimerText: 'Inline Entities',
-   headerText: '## Check Out!',
-   contentText: '---',
-   links: [{
-      text: '1. Google',
-      title: 'Popular Search Engine',
-      url: 'https://www.google.com/'
-   }, {
-      text: '2. YouTube',
-      title: 'Popular Streaming Platform',
-      url: 'https://www.youtube.com/'
-   }, {
-      text: '3. Modded Baileys',
-      title: 'Underrated Baileys Fork',
-      url: 'https://github.com/marrspace/nix408'
-   }],
-   footerText: '---'
-})
-```
-
-#### Message with Table
-
-```javascript
-nix.sendMessage(jid, {
-   disclaimerText: 'Table',
-   headerText: '## Comparison between Node.js, Bun, and Deno',
-   contentText: '---',
-   title: 'Runtime Comparison',
+   title: 'Node.js, Bun and Deno',
    table: [
       ['', 'Node.js', 'Bun', 'Deno'],
-      ['Engine', 'V8 (C++)', 'JavaScriptCore (C++)', 'V8 (C++)'],
-      ['Performance', '4/5', '5/5', '4/5']
+      ['Engine', 'V8', 'JavaScriptCore', 'V8'],
+      ['Startup', 'slow', 'fast', 'fast'],
+      ['npm support', 'yes', 'yes', 'partial']
    ],
-   noHeading: false, // --- Optional
-   footerText: 'Does this help clarify the differences?'
+   noHeading: false, // --- Optional, set true to render every row as data
+   footerText: 'Source: project docs'
 })
+```
+
+##### Full example: text, code, table and citations in one reply
+
+```javascript
+nix.sendMessage(jid, {
+   disclaimerText: 'Rendered by nix408',
+   richResponse: [{
+      text: 'Here is the short version.'
+   }, {
+      text: 'Runtime comparison'
+   }, {
+      title: 'Node.js, Bun and Deno',
+      table: [
+         ['', 'Node.js', 'Bun', 'Deno'],
+         ['Engine', 'V8', 'JavaScriptCore', 'V8'],
+         ['Startup', 'slow', 'fast', 'fast']
+      ]
+   }, {
+      text: 'A config file in JSON'
+   }, {
+      language: 'json',
+      code: [{ highlightType: 0, codeContent: '{ "port": 3000 }' }]
+   }, {
+      text: 'Sources',
+      links: [{
+         text: 'Node.js docs',
+         title: 'Node.js',
+         url: 'https://nodejs.org/'
+      }, {
+         text: 'Bun docs',
+         title: 'Bun',
+         url: 'https://bun.sh/'
+      }]
+   }]
+})
+```
+
+##### Supported languages
+
+`tokenizeCode` ships keyword sets for these languages:
+
+```
+css  html  javascript  typescript  python  golang  rust
+c  c#  c++  bash  bat  powershell
 ```
 
 #### Status Mention
 
 ```javascript
 nix.sendMessage([jidA, jidB, jidC], {
-   text: 'Hello! 👋🏻'
+   text: 'status update'
 })
 ```
 
@@ -863,7 +860,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '🔥 Superb'
+   caption: 'A cover shot'
 }, {
    quoted: message
 })
@@ -878,7 +875,7 @@ nix.sendMessage(jid, {
    },
    gifPlayback: false, // --- Set true if you want to send video as GIF
    ptv: false,  // --- Set true if you want to send video as PTV
-   caption: '🔥 Superb'
+   caption: 'A cover shot'
 }, {
    quoted: message
 })
@@ -917,7 +914,7 @@ nix.sendMessage(jid, {
       url: './path/to/document.pdf'
    },
    mimetype: 'application/pdf',
-   caption: '✨ My work!'
+   caption: 'report.pdf'
 }, {
    quoted: message
 })
@@ -976,8 +973,8 @@ nix.sendMessage(jid, {
          url: './path/to/image.webp'
       }
    }],
-   name: '📦 My Sticker Pack',
-   publisher: '🌟 Lia Wynn',
+   name: 'My sticker pack',
+   publisher: 'nix408',
    description: 'nix408'
 }, {
    quoted: message
@@ -993,10 +990,10 @@ nix.sendMessage(jid, {
 ```javascript
 // --- Regular buttons message
 nix.sendMessage(jid, {
-   text: '👆🏻 Buttons!',
+   text: 'Pick an option',
    footer: 'nix408',
    buttons: [{
-      text: '👋🏻 SignUp',
+      text: 'Sign up',
       id: '#SignUp'
    }]
 }, {
@@ -1008,27 +1005,27 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '👆🏻 Buttons and Native Flow!',
+   caption: 'Options below',
    footer: 'nix408',
    buttons: [{
-      text: '👋🏻 Rating',
+      text: 'Rate us',
       id: '#Rating'
    }, {
-      text: '📋 Select',
+      text: 'Select',
       sections: [{
-         title: '✨ Section 1',
+         title: 'Section one',
          rows: [{
             header: '',
-            title: '💭 Secret Ingredient',
+            title: 'Secret ingredient',
             description: '',
             id: '#SecretIngredient'
          }]
       }, {
-         title: '✨ Section 2',
-         highlight_label: '🔥 Popular',
+         title: 'Section two',
+         highlight_label: 'Popular',
          rows: [{
             header: '',
-            title: '🏷️ Coupon',
+            title: 'Coupon',
             description: '',
             id: '#CouponCode'
          }]
@@ -1046,21 +1043,21 @@ nix.sendMessage(jid, {
 
 ```javascript
 nix.sendMessage(jid, {
-   text: '📋 List!',
+   text: 'Choose a category',
    footer: 'nix408',
-   buttonText: '📋 Select',
-   title: '👋🏻 Hello',
+   buttonText: 'Select',
+   title: 'Menu',
    sections: [{
-      title: '🚀 Menu 1',
+      title: 'Main',
       rows: [{
-         title: '✨ AI',
+         title: 'Ask AI',
          description: '',
          rowId: '#AI'
       }]
    }, {
-      title: '🌱 Menu 2',
+      title: 'Tools',
       rows: [{
-         title: '🔍 Search',
+         title: 'Search',
          description: '',
          rowId: '#Search'
       }]
@@ -1078,44 +1075,44 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '🗄️️ Interactive!',
+   caption: 'Interactive message',
    footer: 'nix408',
-   optionText: '👉🏻 Select Options', // --- Optional, wrap all native flow into a single list
-   optionTitle: '📄 Select Options', // --- Optional
-   offerText: '🏷️ Newest Coupon!', // --- Optional, add an offer into message
+   optionText: 'Select an option', // --- Optional, wrap all native flow into a single list
+   optionTitle: 'Options', // --- Optional
+   offerText: 'New coupon', // --- Optional, add an offer into message
    offerCode: 'nix408', // --- Optional
    offerUrl: 'https://github.com/marrspace/nix408', // --- Optional
    offerExpiration: Date.now() + 3_600_000, // --- Optional
    nativeFlow: [{
-      text: '👋🏻 Greeting',
+      text: 'Say hi',
       id: '#Greeting',
       icon: 'review' // --- Optional
    }, {
-      text: '📞 Call',
+      text: 'Call us',
       call: '628123456789'
    }, {
-      text: '📋 Copy',
+      text: 'Copy',
       copy: 'nix408'
    }, {
-      text: '🌐 Source',
+      text: 'Source',
       url: 'https://github.com/marrspace/nix408',
       useWebview: true // --- Optional
    }, {
-      text: '📋 Select',
+      text: 'Select',
       sections: [{
-         title: '✨ Section 1',
+         title: 'Section one',
          rows: [{
             header: '',
-            title: '🏷️ Coupon',
+            title: 'Coupon',
             description: '',
             id: '#CouponCode'
          }]
       }, {
-         title: '✨ Section 2',
-         highlight_label: '🔥 Popular',
+         title: 'Section two',
+         highlight_label: 'Popular',
          rows: [{
             header: '',
-            title: '💭 Secret Ingredient',
+            title: 'Secret ingredient',
             description: '',
             id: '#SecretIngredient'
          }]
@@ -1129,16 +1126,16 @@ nix.sendMessage(jid, {
 
 // --- Carousel & Native Flow
 nix.sendMessage(jid, {
-   text: '🗂️ Interactive with Carousel!',
+   text: 'Carousel',
    footer: 'nix408',
    cards: [{
       image: {
          url: './path/to/image.jpg'
       },
-      caption: '🖼️ Image 1',
-      footer: '🏷️️ Pinterest',
+      caption: 'Image 1',
+      footer: 'Gallery',
       nativeFlow: [{
-         text: '🌐 Source',
+         text: 'Source',
          url: 'https://github.com/marrspace/nix408',
          useWebview: true
       }]
@@ -1146,34 +1143,34 @@ nix.sendMessage(jid, {
       image: {
          url: './path/to/image.jpg'
       },
-      caption: '🖼️ Image 2',
-      footer: '🏷️ Pinterest',
-      offerText: '🏷️ New Coupon!',
+      caption: 'Image 2',
+      footer: 'Gallery',
+      offerText: 'New coupon',
       offerCode: 'nix408',
       offerUrl: 'https://github.com/marrspace/nix408',
       offerExpiration: Date.now() + 3_600_000,
       nativeFlow: [{
-         text: '🌐 Source',
+         text: 'Source',
          url: 'https://github.com/marrspace/nix408'
       }]
    }, {
       image: {
          url: './path/to/image.jpg'
       },
-      caption: '🖼️ Image 3',
-      footer: '🏷️ Pinterest',
-      optionText: '👉🏻 Select Options',
-      optionTitle: '👉🏻 Select Options',
-      offerText: '🏷️ New Coupon!',
+      caption: 'Image 3',
+      footer: 'Gallery',
+      optionText: 'Select an option',
+      optionTitle: 'Options',
+      offerText: 'New coupon',
       offerCode: 'nix408',
       offerUrl: 'https://github.com/marrspace/nix408',
       offerExpiration: Date.now() + 3_600_000,
       nativeFlow: [{
-         text: '🛒 Product',
+         text: 'Product',
          id: '#Product',
          icon: 'default'
       }, {
-         text: '🌐 Source',
+         text: 'Source',
          url: 'https://github.com/marrspace/nix408'
       }]
    }]
@@ -1183,16 +1180,16 @@ nix.sendMessage(jid, {
 
 // --- Native Flow with Audio in the Footer
 nix.sendMessage(jid, {
-   text: '🔈 Music in the footer!',
+   text: 'Music in the footer',
    audioFooter: {
       url: './path/to/audio.mp3'
    }, // --- Like other media upload methods, buffers and streams are supported
    nativeFlow: [{
-      text: '👍🏻 Good, next',
+      text: 'Good, next',
       id: '#Next',
       icon: 'review'
    }, {
-      text: '👎🏻 Skip',
+      text: 'Skip',
       id: '#Skip',
       icon: 'default'
    }]
@@ -1205,20 +1202,20 @@ nix.sendMessage(jid, {
 
 ```javascript
 nix.sendMessage(jid, {
-   title: '👋🏻 Hello',
+   title: 'Menu',
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '🫙 Template!',
+   caption: 'Template message',
    footer: 'nix408',
    templateButtons: [{
-      text: '👉?? Tap Here',
+      text: 'Tap here',
       id: '#Order'
    }, {
-      text: '🌐 Source',
+      text: 'Source',
       url: 'https://github.com/marrspace/nix408'
    }, {
-      text: '📞 Call',
+      text: 'Call us',
       call: '628123456789'
    }]
 }, {
@@ -1248,7 +1245,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   invoiceNote: '🏷️ Invoice'
+   invoiceNote: 'Invoice #1042'
 })
 ```
 
@@ -1256,7 +1253,7 @@ nix.sendMessage(jid, {
 
 ```javascript
 nix.sendMessage(chat, {
-   orderText: '🛍️ Order',
+   orderText: 'Order #1042',
    thumbnail: fs.readFileSync('./path/to/image.jpg') // --- Must in buffer format
 }, {
    quoted: message
@@ -1267,7 +1264,7 @@ nix.sendMessage(chat, {
 
 ```javascript
 nix.sendMessage(jid, {
-   text: '💳 Request Payment',
+   text: 'Payment request',
    requestPaymentFrom: '0@s.whatsapp.net'
 })
 ```
@@ -1286,7 +1283,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '🤖 With AI icon!',
+   caption: 'Sent with the AI icon',
    ai: true
 }, {
    quoted: message
@@ -1303,7 +1300,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '👁️ Ephemeral',
+   caption: 'Disappearing message',
    ephemeral: true
 })
 ```
@@ -1315,10 +1312,10 @@ nix.sendMessage(jid, {
 
 ```javascript
 nix.sendMessage(jid, {
-   text: '📰 External Ad Reply',
+   text: 'External ad reply',
    externalAdReply: {
-      title: '📝 Did you know?',
-      body: '❓ I dont know',
+      title: 'Did you know?',
+      body: 'A short fact goes here',
       thumbnail: fs.readFileSync('./path/to/image.jpg'), // --- Must in buffer format
       largeThumbnail: false, // --- Or true for bigger thumbnail
       url: 'https://github.com/marrspace/nix408' // --- Optional, used for WhatsApp internal thumbnail caching and direct URL
@@ -1338,7 +1335,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '👥 Group Status!',
+   caption: 'Group status',
    groupStatus: true
 })
 ```
@@ -1362,7 +1359,7 @@ nix.sendMessage(jid, {
 ```javascript
 nix.sendMessage(jid, {
    extendedTextMessage: {
-      text: '📃 Built manually from scratch using the raw WhatsApp proto structure',
+      text: 'Built by hand from the raw WhatsApp proto structure',
       contextInfo: {
          externalAdReply: {
             title: 'nix408',
@@ -1383,7 +1380,7 @@ nix.sendMessage(jid, {
 
 ```javascript
 nix.sendMessage(jid, {
-   text: '🏷️ Just a label!',
+   text: 'Service label',
    secureMetaServiceLabel: true
 })
 ```
@@ -1398,7 +1395,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '❔ Spoiler',
+   caption: 'Tap to reveal',
    spoiler: true
 })
 ```
@@ -1413,7 +1410,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '👁️ View Once',
+   caption: 'View once',
    viewOnce: true
 })
 ```
@@ -1428,7 +1425,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '👁️ View Once V2',
+   caption: 'View once (V2)',
    viewOnceV2: true
 })
 ```
@@ -1443,7 +1440,7 @@ nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
-   caption: '👁️ View Once V2 Extension',
+   caption: 'View once (V2 extension)',
    viewOnceV2Extension: true
 })
 ```
@@ -1465,13 +1462,13 @@ nix.sendMessage(jid, {
 ```javascript
 // --- Edit plain text
 nix.sendMessage(jid, {
-   text: '✨ I mean, nice!',
+   text: 'edited: fixed the typo',
    edit: message.key
 })
 
 // --- Edit media messages caption
 nix.sendMessage(jid, {
-   caption: '✨ I mean, here is the image!',
+   caption: 'edited caption',
    edit: message.key
 })
 ```
@@ -1491,14 +1488,14 @@ const phoneNumber = '6281111111111@s.whatsapp.net'
 
 const ids = await nix.findUserId(phoneNumber)
 
-console.log('🏷️ Got user ID', ':', ids)
+console.log('user id:', ids)
 
 // --- LID (Local Identifier)
 const lid = '43411111111111@lid'
 
 const ids = await nix.findUserId(lid)
 
-console.log('🏷️ Got user ID', ':', ids)
+console.log('user id:', ids)
 
 // --- Output
 // {
@@ -1524,7 +1521,7 @@ const customPairingCode = 'STARFALL'
 
 await nix.requestPairingCode(phoneNumber, customPairingCode)
 
-console.log('🔗 Pairing code', ':', customPairingCode)
+console.log('pairing code:', customPairingCode)
 ```
 
 #### Image Processing
@@ -1579,7 +1576,7 @@ else {
    throw new Error('No image processing available')
 }
 
-console.log('✅ Process completed!')
+console.log('done')
 console.dir(output, { depth: null })
 ```
 
@@ -1587,7 +1584,7 @@ console.dir(output, { depth: null })
 
 ```javascript
 // --- Create a new one
-nix.newsletterCreate('nix408', '📣 Fresh updates weekly')
+nix.newsletterCreate('nix408', 'Release notes and updates')
 
 // --- Get info
 const metadata = nix.newsletterMetadata('1231111111111@newsletter')
@@ -1615,10 +1612,10 @@ nix.newsletterChangeOwner('1231111111111@newsletter', '6281111111111@s.whatsapp.
 nix.newsletterUpdate('1231111111111@newsletter', { name: 'nix408' })
 
 // --- Change name
-nix.newsletterUpdateName('1231111111111@newsletter', '📦 nix408')
+nix.newsletterUpdateName('1231111111111@newsletter', 'nix408')
 
 // --- Change description
-nix.newsletterUpdateDescription('1231111111111@newsletter', '📣 Fresh updates weekly')
+nix.newsletterUpdateDescription('1231111111111@newsletter', 'Release notes and updates')
 
 // --- Change photo
 nix.newsletterUpdatePicture('1231111111111@newsletter', {
@@ -1629,7 +1626,7 @@ nix.newsletterUpdatePicture('1231111111111@newsletter', {
 nix.newsletterRemovePicture('1231111111111@newsletter')
 
 // --- React to a message
-nix.newsletterReactMessage('1231111111111@newsletter', '100', '💛')
+nix.newsletterReactMessage('1231111111111@newsletter', '100', '❤️')
 
 // --- Get admin count
 const count = await nix.newsletterAdminCount('1231111111111@newsletter')
@@ -1687,7 +1684,7 @@ nix.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'demote')
 nix.groupRequestParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'approve')
 
 // --- Change name
-nix.groupUpdateSubject(jid, '📦 nix408')
+nix.groupUpdateSubject(jid, 'nix408')
 
 // --- Change description
 nix.groupUpdateDescription(jid, 'Updated description')
@@ -1738,7 +1735,7 @@ console.dir(requests, { depth: null })
 
 // --- Get group info from link
 const group = await nix.groupGetInviteInfo('ABC123456789')
-console.log('👥 Got group info from invite code', ':', group)
+console.log('group info:', group)
 
 // --- Update bot member label
 nix.updateMemberLabel(jid, 'nix408')
@@ -1748,11 +1745,11 @@ nix.updateMemberLabel(jid, 'nix408')
 
 ```javascript
 // --- Create a new one and add description
-const community = await nix.communityCreate('nix408', '📣 Fresh updates weekly')
+const community = await nix.communityCreate('nix408', 'Release notes and updates')
 console.dir(community, { depth: null })
 
 // --- Create a subgroup for community and add participants using their JIDs
-const group = await nix.communityCreateGroup('📢 Announcements', ['628123456789@s.whatsapp.net'], communityJid)
+const group = await nix.communityCreateGroup('Announcements', ['628123456789@s.whatsapp.net'], communityJid)
 
 // --- Link an existing group
 nix.communityLinkGroup(groupJid, communityJid)
@@ -1781,7 +1778,7 @@ nix.communityLeave(jid)
 nix.communityRequestParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'approve')
 
 // --- Change name
-nix.communityUpdateSubject(jid, '📦 nix408')
+nix.communityUpdateSubject(jid, 'nix408')
 
 // --- Change description
 nix.communityUpdateDescription(jid, 'Updated description')
@@ -1828,7 +1825,7 @@ console.dir(requests, { depth: null })
 
 // --- Get community info from link
 const community = await nix.communityGetInviteInfo('ABC123456789')
-console.log('👥 Got community info from invite code', ':', community)
+console.log('community info:', community)
 ```
 
 #### Profile Management
@@ -1836,7 +1833,7 @@ console.log('👥 Got community info from invite code', ':', community)
 ```javascript
 // --- Get user profile picture
 const url = await nix.profilePictureUrl(jid, 'image')
-console.log('🖼️ Got user profile url', url)
+console.log('profile url:', url)
 
 // --- Update profile picture
 nix.updateProfilePicture(jid, buffer)
@@ -1880,7 +1877,7 @@ nix.chatModify({
 nix.star(jid, [{ id: messageId, fromMe: true }], true)
 
 // --- Contact
-nix.addOrEditContact(jid, { displayName: 'Starseed' })
+nix.addOrEditContact(jid, { displayName: 'Pro plan' })
 nix.removeContact(jid)
 
 // --- Label
@@ -1901,8 +1898,8 @@ console.dir(profile, { depth: null })
 ```javascript
 // --- Create a new product
 const product = await nix.productCreate({
-   name: '🧩 Starseed (Premium)',
-   description: 'Get a full version of Starseed!',
+   name: 'Pro plan',
+   description: 'Lifetime access to the pro plan',
    price: 100000,
    currency: 'IDR',
    originCountryCode: 'ID',
@@ -1917,8 +1914,8 @@ console.dir(product, { depth: null })
 
 // --- Update product
 await nix.productUpdate(productId, {
-   name: '🧩 Starseed (Premium)',
-   description: 'Get a full version of Starseed with more features!',
+   name: 'Pro plan',
+   description: 'Pro plan, now with more features',
    price: 75000,
    currency: 'IDR',
    images: [
@@ -1948,7 +1945,7 @@ console.dir(order, { depth: null })
 // --- Update business profile
 await nix.updateBusinessProfile({
    address: 'Jakarta, Indonesia',
-   description: '🛒 Official Starseed Store',
+   description: 'Online store',
    websites: ['https://github.com/marrspace/nix408'],
    email: 'more-more@gmail.com',
    hours: {
@@ -2075,28 +2072,13 @@ nix.ev.on('settings.update', (update) => {})
 
 ## Credits
 
-nix408 is a fork. Everything below belongs to the people who built the foundation —
-please keep it intact.
+nix408 is a fork. The people below wrote the code it builds on.
 
-**Original Baileys** — maintained by [WhiskeySockets](https://github.com/WhiskeySockets)
-and contributors:
+| | |
+| --- | --- |
+| **Baileys** | [WhiskeySockets](https://github.com/WhiskeySockets) — [purpshell](https://github.com/purpshell), [jlucaso1](https://github.com/jlucaso1), [adiwajshing](https://github.com/adiwajshing) |
+| **wa-proto** | [WPP Connect](https://github.com/wppconnect-team) |
+| **Upstream fork** | [Lia Wynn](https://github.com/itsliaaa) — [@itsliaaa/baileys](https://github.com/itsliaaa/baileys) |
+| **`updateBlockStatus` fix** | [itsreimau](https://github.com/itsreimau) |
 
-- [purpshell](https://github.com/purpshell)
-- [jlucaso1](https://github.com/jlucaso1)
-- [adiwajshing](https://github.com/adiwajshing)
-
-**Protocol Buffer definitions** — maintained by
-[WPP Connect](https://github.com/wppconnect-team) via
-[`wa-proto`](https://github.com/wppconnect-team/wa-proto).
-
-**Upstream fork** — additional enhancements and modifications by
-[Lia Wynn](https://github.com/itsliaaa) ([@itsliaaa/baileys](https://github.com/itsliaaa/baileys)).
-
-**Special thanks** — [itsreimau](https://github.com/itsreimau) for the `updateBlockStatus` fix.
-
-<!-- Please do not replace the upstream names above with yours. It's disrespectful. -->
-
-**nix408** is maintained by [marrspace](https://github.com/marrspace).
-
-> [!CAUTION]
-> **Modification, removal, or misrepresentation of these credits is strictly prohibited. Any redistribution or fork must preserve this section in its original form without exception.**
+Maintained by [marrspace](https://github.com/marrspace). MIT — see [LICENSE](LICENSE).
