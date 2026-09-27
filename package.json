@@ -5,6 +5,51 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    },
+    "./Utils": {
+      "types": "./lib/Utils/index.d.ts",
+      "default": "./lib/Utils/index.js"
+    },
+    "./Types": {
+      "types": "./lib/Types/index.d.ts",
+      "default": "./lib/Types/index.js"
+    },
+    "./Defaults": {
+      "types": "./lib/Defaults/index.d.ts",
+      "default": "./lib/Defaults/index.js"
+    },
+    "./Store": {
+      "types": "./lib/Store/index.d.ts",
+      "default": "./lib/Store/index.js"
+    },
+    "./Socket": {
+      "types": "./lib/Socket/index.d.ts",
+      "default": "./lib/Socket/index.js"
+    },
+    "./WABinary": {
+      "types": "./lib/WABinary/index.d.ts",
+      "default": "./lib/WABinary/index.js"
+    },
+    "./WAM": {
+      "types": "./lib/WAM/index.d.ts",
+      "default": "./lib/WAM/index.js"
+    },
+    "./WAUSync": {
+      "types": "./lib/WAUSync/index.d.ts",
+      "default": "./lib/WAUSync/index.js"
+    },
+    "./WAProto": {
+      "types": "./WAProto/index.d.ts",
+      "default": "./WAProto/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
     "preinstall": "node ./engine-requirements.js"
   },

@@ -70,6 +70,24 @@ in [LICENSE](LICENSE).
 | Newsletters | Management API plus the media upload fix |
 | Groups and communities | Full management APIs |
 
+## How nix408 compares
+
+Three libraries, one lineage. This is what each one gives you.
+
+| | WhiskeySockets/Baileys | @itsliaaa/baileys | nix408 |
+| --- | --- | --- | --- |
+| Interactive messages, albums, rich responses | no | yes | yes |
+| Newsletter media upload | broken | fixed | fixed |
+| FFmpeg process handling | `exec` | `spawn` | `spawn` |
+| `makeInMemoryStore` on v7 | removed | restored | restored |
+| Upstream branding inside the code | none | `Lia@` notes, custom logger names, personal strings | removed |
+| Documentation | plain API dump | emoji headings, one long page | rewritten, with an AI Rich guide |
+| Subpath imports | no | no | yes (`nix408/Utils`, `nix408/WAProto`, ...) |
+| Install | `npm i baileys` | `npm i @itsliaaa/baileys` | GitHub for now |
+
+If you only need the upstream protocol, use Baileys. If you want the extra message types with the
+branding stripped out and the docs cleaned up, that is what nix408 is.
+
 ## Requirements
 
 - Node.js 20 or newer. `engine-requirements.js` checks this at install time.
@@ -105,6 +123,7 @@ throughout. Use the table of contents to jump to a topic.
 
 - [Installation](#installation)
   - [Import (ESM & CJS)](#import-esm--cjs)
+  - [Subpath imports](#subpath-imports)
 - [Connecting to WhatsApp](#connecting-to-whatsapp)
   - [Auth State](#auth-state)
 - [Data store](#data-store)
@@ -205,6 +224,35 @@ import { makeWASocket } from 'nix408'
 // --- CJS (works on Node.js 24)
 const { makeWASocket } = require('nix408')
 ```
+
+#### Subpath imports
+
+Import only the part you need instead of the whole package. Every subpath below ships its own
+types, so your editor autocompletes without pulling in the rest.
+
+```javascript
+import { makeWASocket } from 'nix408'                 // main entry
+import { tokenizeCode, prepareRichResponseMessage } from 'nix408/Utils'
+import { proto } from 'nix408/WAProto'
+import { Browsers } from 'nix408/Utils'
+import { DisconnectReason } from 'nix408/Types'
+import { makeInMemoryStore } from 'nix408/Store'
+```
+
+Available subpaths:
+
+| Subpath | Contains |
+| --- | --- |
+| `nix408` | Everything, the main entry point |
+| `nix408/Utils` | Helpers: `tokenizeCode`, message builders, media, auth state |
+| `nix408/Types` | TypeScript types and enums |
+| `nix408/Defaults` | Default config, `DONATE_URL`, `LIBRARY_NAME` |
+| `nix408/Store` | `makeInMemoryStore` |
+| `nix408/Socket` | The socket implementation |
+| `nix408/WABinary` | Binary encode/decode and language keyword tables |
+| `nix408/WAM` | WhatsApp metrics |
+| `nix408/WAUSync` | USync protocol |
+| `nix408/WAProto` | Protobuf message definitions |
 
 <p align="right"><a href="#nix408">↑ back to top</a></p>
 
