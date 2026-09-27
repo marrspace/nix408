@@ -25,8 +25,9 @@ export function prepareRichResponseMessage(content: any): {
         };
     };
 };
-export function botMetadataSignature(): Uint8Array<ArrayBuffer>;
-export function botMetadataCertificate(length?: number): Uint8Array<ArrayBuffer>;
+export const botMetadataSignature: Uint8Array<ArrayBuffer>;
+export function botMetadataCertificate(index?: number): Uint8Array<ArrayBuffer>;
+export const botMetadataCertificateChain: Uint8Array<ArrayBuffer>[];
 export function wrapToBotForwardedMessage(richResponseMessage: any): {
     messageContextInfo: {
         botMetadata: {

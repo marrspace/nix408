@@ -1524,80 +1524,9 @@ These helpers return a message object. Pass it straight to `sendMessage` (the ke
 
 #### AI Rich: raw HTML
 
-An AI Rich HTML reply is a `richResponseMessage` wrapped in a `botForwardedMessage`. The card
-itself is the `payload` string below — everything else is scaffolding WhatsApp requires and you
-should not touch. Change the HTML, keep the rest.
-
-```javascript
-import { randomUUID } from 'crypto'
-import { proto } from 'nix408/WAProto'
-
-const html = '<section class="card"><h1>Status</h1><p>All systems up.</p></section>'
-
-const message = {
-   messageContextInfo: {
-      botMetadata: {
-         // nix408: fills proofs[] with a signature + certificate chain for you
-         verificationMetadata: {
-            proofs: [{
-               version: 1,
-               useCase: 1,
-               signature: /* Uint8Array */ undefined,
-               certificateChain: [/* Uint8Array */]
-            }]
-         }
-      }
-   },
-   botForwardedMessage: {
-      message: {
-         richResponseMessage: {
-            messageType: proto.AIRichResponseMessageType.AI_RICH_RESPONSE_TYPE_STANDARD,
-            submessages: [{ messageType: 2, messageText: '' }],
-            unifiedResponse: {
-               data: Buffer.from(JSON.stringify({
-                  response_id: randomUUID(),
-                  sections: [{
-                     view_model: {
-                        primitive: {
-                           __typename: 'GenAIaeacdsnwHtmlPrimitive',
-                           payload: html,                     // <-- the only part you change
-                           trusted_sources: ['marrlabs.my.id']
-                        },
-                        __typename: 'GenAISingleLayoutViewModel'
-                     }
-                  }]
-               }))
-            },
-            contextInfo: {
-               forwardingScore: 1,
-               isForwarded: true,
-               forwardedAiBotMessageInfo: { botJid: '867051314767696@bot' },
-               forwardOrigin: 4
-            }
-         }
-      }
-   }
-}
-
-await nix.relayMessage(jid, message, {
-   additionalNodes: [{
-      tag: 'biz',
-      attrs: { actual_actors: '2', host_storage: '2', privacy_mode_ts: '1788095961' },
-      content: [{
-         tag: 'interactive',
-         attrs: { type: 'native_flow', v: '1' },
-         content: [{ tag: 'native_flow', attrs: { v: '9', name: 'mixed' } }]
-      }]
-   }]
-})
-```
-
-Two things you must not change: the `botJid` (`867051314767696@bot`) and the `biz` node. Without
-the `biz` node the card does not render. nix408 now adds that node for you, so the example below
-is all you need.
-
-**The short version.** Hand the HTML to `aiRichHtml` and nix408 builds the whole structure —
-`botForwardedMessage`, the bot metadata, the signature, the `biz` node:
+Hand the HTML to `aiRichHtml` and nix408 builds the whole structure — the `botForwardedMessage`
+wrapper, the `botMetadata` block, the verification signature and the `biz` node. You write the
+HTML, nothing else.
 
 ```javascript
 nix.sendMessage(jid, {
@@ -1620,7 +1549,7 @@ nix.sendMessage(jid, {
 | `disclaimerText` | Small print under the message |
 | `responseId` | Fixed response id; a UUID is generated when omitted |
 
-Or build it yourself and relay it:
+Or build it and relay it yourself:
 
 ```javascript
 import { prepareAiRichHtml } from 'nix408/Utils'
@@ -1629,19 +1558,40 @@ const message = prepareAiRichHtml({ html: '<p>hi</p>' })
 await nix.relayMessage(jid, message, {})
 ```
 
-##### What nix408 adds for you
+##### What nix408 fills in
 
-`prepareAiRichHtml` and the other AI Rich helpers fill in the parts the raw shape above leaves
-blank:
+The raw WhatsApp shape needs a lot of fixed scaffolding. nix408 keeps it in one place —
+`lib/Defaults/ai-bot.js` — and every AI Rich helper pulls from there, so you never paste it:
+
+| Constant | Value | Why |
+| --- | --- | --- |
+| `AI_BOT_JID` | `867051314767696@bot` | The bot identity WhatsApp expects in `forwardedAiBotMessageInfo` |
+| `AI_BOT_SIGNATURE` | fixed `Uint8Array(64)` | `verificationMetadata.proofs[0].signature` |
+| `AI_BOT_CERTIFICATE_CHAIN` | fixed `Uint8Array[2]` | `proofs[0].certificateChain` |
+| `AI_BOT_METADATA` | assembled block | `messageContextInfo.botMetadata` |
+| `AI_BOT_FORWARDED_CONTEXT_INFO` | `{ isForwarded, forwardingScore, forwardedAiBotMessageInfo, forwardOrigin }` | `richResponseMessage.contextInfo` |
+| `AI_BOT_MESSAGE_CONTEXT_INFO` | assembled block | Top-level `messageContextInfo` |
+
+The signature and certificate chain are **fixed values**, not generated per message. They have
+been stable in production, so nix408 ships them as constants instead of random bytes. If you ever
+need to override them, spread your own values over `AI_BOT_METADATA`.
+
+Everything below is handled automatically — do not hardcode any of it:
 
 - the `botForwardedMessage` wrapper and `messageContextInfo.botMetadata`;
-- a `verificationMetadata.proofs[]` entry with a random signature and certificate chain
-  (`botMetadataSignature()` / `botMetadataCertificate()`), so you never paste a fixed one;
+- the `verificationMetadata.proofs[]` entry (fixed signature + certificate chain);
 - a `botResponseId` that matches the `response_id` inside `unifiedResponse`;
-- the `biz` → `native_flow` (`v: 9`, `name: mixed`) node, injected automatically because
-  `shouldIncludeBizBinaryNode` recognises `richResponseMessage`;
-- the group `senderKeyDistributionMessage` (SKDM), which the socket adds when it encrypts for a
-  group. You only pass it yourself when you call `relayMessage` with a hand-written payload.
+- the `biz` → `native_flow` (`v: 9`, `name: mixed`) node, injected because
+  `shouldIncludeBizBinaryNode` now recognises `richResponseMessage`;
+- the group `senderKeyDistributionMessage` (SKDM), added by the socket when it encrypts for a
+  group. You only pass it yourself when calling `relayMessage` with a hand-written payload.
+
+If you do want the raw shape, import the constants instead of typing them:
+
+```javascript
+import { AI_BOT_METADATA, AI_BOT_FORWARDED_CONTEXT_INFO, AI_BOT_JID } from 'nix408/Defaults'
+import { prepareAiRichHtml } from 'nix408/Utils'
+```
 
 #### AI Rich: image grid and entity card
 
