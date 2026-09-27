@@ -1,7 +1,7 @@
 export namespace Browsers {
     function ubuntu(browser: any): any[];
     function macOS(browser: any): any[];
-    function baileys(browser: any): any[];
+    function nix408(browser: any): any[];
     function windows(browser: any): any[];
     function android(browser: any): any[];
     function appropriate(browser: any): any[];

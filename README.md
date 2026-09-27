@@ -1,17 +1,27 @@
+<div align="center">
+
 # nix408
 
 **WhatsApp Web automation, refined.**
 
-nix408 is a maintained fork of [@itsliaaa/baileys](https://github.com/itsliaaa/baileys), itself a
-fork of [WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys). It keeps the
-battle-tested WhatsApp Web protocol implementation and extends it with the message types WhatsApp
-actually ships today — buttons, lists, albums, polls, payments, rich responses and more.
+A maintained fork of [`@itsliaaa/baileys`](https://github.com/itsliaaa/baileys) →
+[`WhiskeySockets/Baileys`](https://github.com/WhiskeySockets/Baileys), extended with the message
+types WhatsApp actually ships today.
+
+[![repo](https://img.shields.io/badge/repo-marrspace%2Fnix408-0b0f14?style=flat-square&logo=github)](https://github.com/marrspace/nix408)
+[![license](https://img.shields.io/badge/license-MIT-22d3ee?style=flat-square)](LICENSE)
+[![node](https://img.shields.io/badge/node-%E2%89%A520-3c873a?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![module](https://img.shields.io/badge/module-ESM%20%2B%20CJS-8957e5?style=flat-square)](#requirements)
+
+</div>
 
 ```bash
 npm install github:marrspace/nix408#main
 ```
 
-[Quick start](#quick-start) · [Reference](#documentation) · [Lineage](#lineage) · [Credits](#credits)
+[Quick start](#quick-start) &nbsp;·&nbsp; [Documentation](#documentation) &nbsp;·&nbsp; [Lineage](#lineage) &nbsp;·&nbsp; [Credits](#credits)
+
+---
 
 ## About
 
@@ -26,6 +36,17 @@ We don't pretend to be the original. nix408 is a fork, and we say so plainly: th
 authors are credited in full at the bottom of this file and in [LICENSE](LICENSE).
 
 > **If you fork nix408, keep the credits.** That is the whole deal.
+
+## At a glance
+
+| | |
+| --- | --- |
+| **Package** | `nix408` — GitHub only, not on npm |
+| **Runtime** | Node.js ≥ 20, ESM first (`require()` also supported) |
+| **Socket variable** | `nix` in every example — `const nix = makeWASocket(...)` |
+| **Message types** | Text, media, albums, buttons, lists, flows, polls, payments, rich responses |
+| **Extras** | Newsletter management, groups, communities, profiles, privacy, business |
+| **Auth** | Multi-file, single-file and SQLite auth state |
 
 ## Why nix408?
 
@@ -67,21 +88,23 @@ npm install github:marrspace/nix408#main
 import { makeWASocket, useMultiFileAuthState } from 'nix408'
 
 const { state, saveCreds } = await useMultiFileAuthState('auth_info')
-const sock = makeWASocket({ auth: state })
+const nix = makeWASocket({ auth: state })
 
-sock.ev.on('creds.update', saveCreds)
-sock.ev.on('connection.update', ({ connection }) => {
+nix.ev.on('creds.update', saveCreds)
+nix.ev.on('connection.update', ({ connection }) => {
   if (connection === 'open') console.log('connected')
 })
 ```
 
-Full walkthrough → [Connect to WhatsApp](#connecting-to-whatsapp).
+Full walkthrough → [Connecting to WhatsApp](#connecting-to-whatsapp).
 
 ## Documentation
 
-Every section below is a reference with runnable examples — jump to a topic:
+Every section below is a reference with runnable examples. All examples use the socket variable
+**`nix`**. Use the table of contents to jump straight to a topic.
 
-### Contents
+<details open>
+<summary><b>Table of contents</b></summary>
 
 - [Installation](#installation)
   - [Import (ESM & CJS)](#import-esm--cjs)
@@ -153,6 +176,10 @@ Every section below is a reference with runnable examples — jump to a topic:
   - [Privacy Management](#privacy-management)
   - [Events](#events)
 
+</details>
+
+<p align="right"><a href="#nix408">↑ back to top</a></p>
+
 ### Installation
 
 nix408 is distributed through GitHub. It is **not** published on npm.
@@ -185,6 +212,8 @@ import { makeWASocket } from 'nix408'
 const { makeWASocket } = require('nix408')
 ```
 
+<p align="right"><a href="#nix408">↑ back to top</a></p>
+
 ### Connecting to WhatsApp
 
 ```javascript
@@ -200,18 +229,18 @@ const logger = pino({ level: 'silent' })
 const connectToWhatsApp = async () => {
    const { state, saveCreds } = await useMultiFileAuthState('session')
     
-   const sock = makeWASocket({
+   const nix = makeWASocket({
       logger,
       auth: state
    })
 
-   sock.ev.on('creds.update', saveCreds)
+   nix.ev.on('creds.update', saveCreds)
 
-   sock.ev.on('connection.update', async (update) => {
+   nix.ev.on('connection.update', async (update) => {
       const { connection, lastDisconnect } = update
-      if (connection === 'connecting' && !sock.authState.creds.registered) {
+      if (connection === 'connecting' && !nix.authState.creds.registered) {
          await delay(1500)
-         const code = await sock.requestPairingCode(myPhoneNumber)
+         const code = await nix.requestPairingCode(myPhoneNumber)
          console.log('🔗 Pairing code', ':', code)
       }
       else if (connection === 'close') {
@@ -226,12 +255,12 @@ const connectToWhatsApp = async () => {
       }
    })
 
-   sock.ev.on('messages.upsert', async ({ messages }) => {
+   nix.ev.on('messages.upsert', async ({ messages }) => {
       for (const message of messages) {
          if (!message.message) continue
 
          console.log('🔔 Got new message', ':', message)
-         await sock.sendMessage(message.key.remoteJid, {
+         await nix.sendMessage(message.key.remoteJid, {
             text: '👋🏻 Hello world'
          })
       }
@@ -245,6 +274,8 @@ connectToWhatsApp()
 
 > [!NOTE]
 > You can use the experimental useSingleFileAuthState and useSqliteAuthState as an alternative to useMultiFileAuthState. However, useSingleFileAuthState already includes an internal caching mechanism, so there is no need to wrap state.keys with makeCacheableSignalKeyStore.
+
+<p align="right"><a href="#nix408">↑ back to top</a></p>
 
 ### Data store
 
@@ -266,25 +297,25 @@ const logger = pino({ level: 'silent' })
 const connectToWhatsApp = async () => {
    const { state, saveCreds } = await useMultiFileAuthState('session')
     
-   const sock = makeWASocket({
+   const nix = makeWASocket({
       logger,
       auth: state
    })
 
    const store = makeInMemoryStore({
       logger,
-      socket: sock
+      socket: nix
    })
 
-   store.bind(sock.ev)
+   store.bind(nix.ev)
 
-   sock.ev.on('creds.update', saveCreds)
+   nix.ev.on('creds.update', saveCreds)
 
-   sock.ev.on('connection.update', async (update) => {
+   nix.ev.on('connection.update', async (update) => {
       const { connection, lastDisconnect } = update
-      if (connection === 'connecting' && !sock.authState.creds.registered) {
+      if (connection === 'connecting' && !nix.authState.creds.registered) {
          await delay(1500)
-         const code = await sock.requestPairingCode(myPhoneNumber)
+         const code = await nix.requestPairingCode(myPhoneNumber)
          console.log('🔗 Pairing code', ':', code)
       }
       else if (connection === 'close') {
@@ -299,11 +330,11 @@ const connectToWhatsApp = async () => {
       }
    })
 
-   sock.ev.on('chats.upsert', () => {
+   nix.ev.on('chats.upsert', () => {
       console.log('✉️ Got chats', store.chats.all())
    })
 
-   sock.ev.on('contacts.upsert', () => {
+   nix.ev.on('contacts.upsert', () => {
       console.log('👥 Got contacts', Object.values(store.contacts))
    })
 
@@ -319,6 +350,8 @@ const connectToWhatsApp = async () => {
 connectToWhatsApp()
 ```
 
+<p align="right"><a href="#nix408">↑ back to top</a></p>
+
 ### WhatsApp IDs
 
 `id` is the WhatsApp ID, called `jid` and `lid` too, of the person or group you're sending the message to.
@@ -329,6 +362,8 @@ connectToWhatsApp()
 - For broadcast lists, it's `[timestamp of creation]@broadcast`.
 - For stories, the ID is `status@broadcast`.
 
+<p align="right"><a href="#nix408">↑ back to top</a></p>
+
 ### Sending messages
 
 > [!NOTE]
@@ -338,7 +373,7 @@ connectToWhatsApp()
 
 ```javascript
 // --- Send a regular text message
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '👋🏻 Hello'
 }, {
    quoted: message
@@ -347,7 +382,7 @@ sock.sendMessage(jid, {
 // --- Send a text message with a link preview
 const urlA = 'https://github.com/marrspace/nix408'
 
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: urlA + ' 👆🏻 Check it out!',
    linkPreview: {
       'matched-text': urlA,
@@ -368,7 +403,7 @@ const { imageMessage: image } = await prepareWAMessageMedia({
       url: './path/to/image.jpg'
    }
 }, {
-   upload: sock.waUploadToServer,
+   upload: nix.waUploadToServer,
    mediaTypeOverride: 'thumbnail-link'
 })
 
@@ -376,7 +411,7 @@ const { imageMessage: image } = await prepareWAMessageMedia({
 image.height = 720
 image.width = 480
 
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: urlB + ' 👆🏻 Check it out!',
    linkPreview: {
       'matched-text': urlB,
@@ -400,7 +435,7 @@ sock.sendMessage(jid, {
 
 ```javascript
 // --- Regular mention
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '👋🏻 Hello @628123456789',
    mentions: ['628123456789@s.whatsapp.net']
 }, {
@@ -408,7 +443,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Mention all
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '👋🏻 Hello @all',
    mentionAll: true
 }, {
@@ -419,7 +454,7 @@ sock.sendMessage(jid, {
 #### Reaction
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    react: {
       key: message.key,
       text: '✨'
@@ -430,7 +465,7 @@ sock.sendMessage(jid, {
 #### Pin Message
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    pin: message.key,
    time: 86400, // --- Set the value in seconds: 86400 (1d), 604800 (7d), or 2592000 (30d)
    type: 1 // --- Or 2 to remove
@@ -443,7 +478,7 @@ sock.sendMessage(jid, {
 > Keep Chat can only be used in chats or groups with disappearing messages enabled.
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    keep: message.key,
    type: 1 // --- Or 2 to remove
 })
@@ -452,7 +487,7 @@ sock.sendMessage(jid, {
 #### Forward Message
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    forward: message,
    force: true // --- Optional
 })
@@ -468,7 +503,7 @@ const vcard = 'BEGIN:VCARD\n'
             + 'TEL;type=CELL;type=VOICE;waid=628123456789:+62 8123 4567 89\n'
             + 'END:VCARD'
 
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    contacts: {
       displayName: 'Lia Wynn',
       contacts: [
@@ -483,7 +518,7 @@ sock.sendMessage(jid, {
 #### Location
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    location: {
       degreesLatitude: 24.121231,
       degreesLongitude: 55.1121221,
@@ -497,7 +532,7 @@ sock.sendMessage(jid, {
 #### Event
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    event: {
       name: '🎶 Meet & Mingle Party',
       description: 'Meet & Mingle Party is a fun, casual gathering to connect, chat, and build new relationships within the community.',
@@ -528,7 +563,7 @@ const inviteCode = groupUrl
 const groupJid = '1201111111111@g.us'
 const groupName = 'nix408'
 
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    groupInvite: {
       inviteCode,
       inviteExpiration: Date.now() + 86400000,
@@ -546,7 +581,7 @@ sock.sendMessage(jid, {
 ```javascript
 import { randomUUID } from 'crypto'
 
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -571,7 +606,7 @@ sock.sendMessage(jid, {
 
 ```javascript
 // --- Regular poll message
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    poll: {
       name: '🔥 Voting time',
       values: ['Yes', 'No'],
@@ -586,7 +621,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Quiz (only for newsletter)
-sock.sendMessage('1211111111111@newsletter', {
+nix.sendMessage('1211111111111@newsletter', {
    poll: {
       name: '🔥 Quiz',
       values: ['Yes', 'No'],
@@ -598,7 +633,7 @@ sock.sendMessage('1211111111111@newsletter', {
 })
 
 // --- Poll result
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    pollResult: {
       name: '📝 Poll Result',
       votes: [{
@@ -615,7 +650,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Poll update
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    pollUpdate: {
       metadata: {},
       key: message.key,
@@ -633,7 +668,7 @@ sock.sendMessage(jid, {
 
 ```javascript
 // --- Using buttonsResponseMessage
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    type: 'plain',
    buttonReply: {
       id: '#Menu',
@@ -644,7 +679,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Using interactiveResponseMessage
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    flowReply: {
       format: 0,
       text: '💭 Response',
@@ -659,7 +694,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Using listResponseMessage
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    listReply: {
       title: '📄 See More',
       description: '✨ Interesting Menu',
@@ -670,7 +705,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Using templateButtonReplyMessage
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    type: 'template',
    buttonReply: {
       id: '#Menu',
@@ -692,7 +727,7 @@ sock.sendMessage(jid, {
 > The code example below is just an implementation using a helper, not a required structure.
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    disclaimerText: 'RAW submessages structure example',
    richResponse: [{
       text: 'Example Usage',
@@ -733,7 +768,7 @@ import { tokenizeCode } from 'nix408'
 const language = 'javascript'
 const code = 'console.log("Hello, World!")'
 
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    disclaimerText: 'Example of tokenizing Code Block',
    richResponse: [{
       text: 'Example Usage',
@@ -754,7 +789,7 @@ sock.sendMessage(jid, {
 > This feature already includes a built-in tokenizer with tokenizeCode.
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    disclaimerText: 'Code Block',
    headerText: '## Example Usage',
    contentText: '---',
@@ -767,7 +802,7 @@ sock.sendMessage(jid, {
 #### Message with Inline Entities
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    disclaimerText: 'Inline Entities',
    headerText: '## Check Out!',
    contentText: '---',
@@ -791,7 +826,7 @@ sock.sendMessage(jid, {
 #### Message with Table
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    disclaimerText: 'Table',
    headerText: '## Comparison between Node.js, Bun, and Deno',
    contentText: '---',
@@ -809,10 +844,12 @@ sock.sendMessage(jid, {
 #### Status Mention
 
 ```javascript
-sock.sendMessage([jidA, jidB, jidC], {
+nix.sendMessage([jidA, jidB, jidC], {
    text: 'Hello! 👋🏻'
 })
 ```
+
+<p align="right"><a href="#nix408">↑ back to top</a></p>
 
 ### Sending media
 
@@ -822,7 +859,7 @@ sock.sendMessage([jidA, jidB, jidC], {
 #### Image
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -835,7 +872,7 @@ sock.sendMessage(jid, {
 #### Video
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    video: {
       url: './path/to/video.mp4'
    },
@@ -850,7 +887,7 @@ sock.sendMessage(jid, {
 #### Sticker
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    sticker: {
       url: './path/to/sticker.webp'
    }
@@ -862,7 +899,7 @@ sock.sendMessage(jid, {
 #### Audio
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    audio: {
       url: './path/to/audio.mp3'
    },
@@ -875,7 +912,7 @@ sock.sendMessage(jid, {
 #### Document
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    document: {
       url: './path/to/document.pdf'
    },
@@ -889,7 +926,7 @@ sock.sendMessage(jid, {
 #### Album (Image & Video)
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    album: [{
       image: {
          url: './path/to/image.jpg'
@@ -922,7 +959,7 @@ sock.sendMessage(jid, {
 > If sharp or @napi-rs/image is not installed, the cover and stickers must already be in WebP format.
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    cover: {
       url: './path/to/image.webp'
    },
@@ -947,13 +984,15 @@ sock.sendMessage(jid, {
 })
 ```
 
+<p align="right"><a href="#nix408">↑ back to top</a></p>
+
 ### Interactive messages
 
 #### Buttons
 
 ```javascript
 // --- Regular buttons message
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '👆🏻 Buttons!',
    footer: 'nix408',
    buttons: [{
@@ -965,7 +1004,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Buttons with Media & Native Flow
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1006,7 +1045,7 @@ sock.sendMessage(jid, {
 > It only works in private chat (@s.whatsapp.net).
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '📋 List!',
    footer: 'nix408',
    buttonText: '📋 Select',
@@ -1035,7 +1074,7 @@ sock.sendMessage(jid, {
 
 ```javascript
 // --- Native Flow
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1089,7 +1128,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Carousel & Native Flow
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '🗂️ Interactive with Carousel!',
    footer: 'nix408',
    cards: [{
@@ -1143,7 +1182,7 @@ sock.sendMessage(jid, {
 })
 
 // --- Native Flow with Audio in the Footer
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '🔈 Music in the footer!',
    audioFooter: {
       url: './path/to/audio.mp3'
@@ -1165,7 +1204,7 @@ sock.sendMessage(jid, {
 #### Hydrated Template
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    title: '👋🏻 Hello',
    image: {
       url: './path/to/image.jpg'
@@ -1187,12 +1226,14 @@ sock.sendMessage(jid, {
 })
 ```
 
+<p align="right"><a href="#nix408">↑ back to top</a></p>
+
 ### Payment messages
 
 #### Invite Payment
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    paymentInviteServiceType: 3 // 1, 2, or 3
 })
 ```
@@ -1203,7 +1244,7 @@ sock.sendMessage(jid, {
 > Invoice message are not supported yet.
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1214,7 +1255,7 @@ sock.sendMessage(jid, {
 #### Order
 
 ```javascript
-sock.sendMessage(chat, {
+nix.sendMessage(chat, {
    orderText: '🛍️ Order',
    thumbnail: fs.readFileSync('./path/to/image.jpg') // --- Must in buffer format
 }, {
@@ -1225,11 +1266,13 @@ sock.sendMessage(chat, {
 #### Request Payment
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '💳 Request Payment',
    requestPaymentFrom: '0@s.whatsapp.net'
 })
 ```
+
+<p align="right"><a href="#nix408">↑ back to top</a></p>
 
 ### Message options
 
@@ -1239,7 +1282,7 @@ sock.sendMessage(jid, {
 > It only works in private chat (@s.whatsapp.net).
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1256,7 +1299,7 @@ sock.sendMessage(jid, {
 > Wrap message into ephemeralMessage
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1271,7 +1314,7 @@ sock.sendMessage(jid, {
 > Add an ad thumbnail to messages (may not be displayed on some WhatsApp versions).
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '📰 External Ad Reply',
    externalAdReply: {
       title: '📝 Did you know?',
@@ -1291,7 +1334,7 @@ sock.sendMessage(jid, {
 > It only works in group chat (@g.us)
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1306,7 +1349,7 @@ sock.sendMessage(jid, {
 > Wrap message into lottieStickerMessage
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    sticker: {
       url: './path/to/sticker.webp'
    },
@@ -1317,7 +1360,7 @@ sock.sendMessage(jid, {
 #### Raw
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    extendedTextMessage: {
       text: '📃 Built manually from scratch using the raw WhatsApp proto structure',
       contextInfo: {
@@ -1339,7 +1382,7 @@ sock.sendMessage(jid, {
 #### Secure Meta Service Label
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '🏷️ Just a label!',
    secureMetaServiceLabel: true
 })
@@ -1351,7 +1394,7 @@ sock.sendMessage(jid, {
 > Wrap message into spoilerMessage
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1366,7 +1409,7 @@ sock.sendMessage(jid, {
 > Wrap message into viewOnceMessage
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1381,7 +1424,7 @@ sock.sendMessage(jid, {
 > Wrap message into viewOnceMessageV2
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1396,7 +1439,7 @@ sock.sendMessage(jid, {
 > Wrap message into viewOnceMessageV2Extension
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    image: {
       url: './path/to/image.jpg'
    },
@@ -1405,12 +1448,14 @@ sock.sendMessage(jid, {
 })
 ```
 
+<p align="right"><a href="#nix408">↑ back to top</a></p>
+
 ### Modifying messages
 
 #### Delete Messages
 
 ```javascript
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    delete: message.key
 })
 ```
@@ -1419,17 +1464,19 @@ sock.sendMessage(jid, {
 
 ```javascript
 // --- Edit plain text
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    text: '✨ I mean, nice!',
    edit: message.key
 })
 
 // --- Edit media messages caption
-sock.sendMessage(jid, {
+nix.sendMessage(jid, {
    caption: '✨ I mean, here is the image!',
    edit: message.key
 })
 ```
+
+<p align="right"><a href="#nix408">↑ back to top</a></p>
 
 ### API reference
 
@@ -1442,14 +1489,14 @@ sock.sendMessage(jid, {
 // --- PN (Phone Number)
 const phoneNumber = '6281111111111@s.whatsapp.net'
 
-const ids = await sock.findUserId(phoneNumber)
+const ids = await nix.findUserId(phoneNumber)
 
 console.log('🏷️ Got user ID', ':', ids)
 
 // --- LID (Local Identifier)
 const lid = '43411111111111@lid'
 
-const ids = await sock.findUserId(lid)
+const ids = await nix.findUserId(lid)
 
 console.log('🏷️ Got user ID', ':', ids)
 
@@ -1475,7 +1522,7 @@ console.log('🏷️ Got user ID', ':', ids)
 const phoneNumber = '6281111111111'
 const customPairingCode = 'STARFALL'
 
-await sock.requestPairingCode(phoneNumber, customPairingCode)
+await nix.requestPairingCode(phoneNumber, customPairingCode)
 
 console.log('🔗 Pairing code', ':', customPairingCode)
 ```
@@ -1540,247 +1587,247 @@ console.dir(output, { depth: null })
 
 ```javascript
 // --- Create a new one
-sock.newsletterCreate('nix408', '📣 Fresh updates weekly')
+nix.newsletterCreate('nix408', '📣 Fresh updates weekly')
 
 // --- Get info
-const metadata = sock.newsletterMetadata('1231111111111@newsletter')
+const metadata = nix.newsletterMetadata('1231111111111@newsletter')
 console.dir(metadata, { depth: null })
 
 // --- Get subscribers count
-const subscribers = await sock.newsletterSubscribers('1231111111111@newsletter')
+const subscribers = await nix.newsletterSubscribers('1231111111111@newsletter')
 console.dir(subscribers, { depth: null })
 
 // --- Follow and Unfollow
-sock.newsletterFollow('1231111111111@newsletter')
-sock.newsletterUnfollow('1231111111111@newsletter')
+nix.newsletterFollow('1231111111111@newsletter')
+nix.newsletterUnfollow('1231111111111@newsletter')
 
 // --- Mute and Unmute
-sock.newsletterMute('1231111111111@newsletter')
-sock.newsletterUnmute('1231111111111@newsletter')
+nix.newsletterMute('1231111111111@newsletter')
+nix.newsletterUnmute('1231111111111@newsletter')
 
 // --- Demote admin
-sock.newsletterDemote('1231111111111@newsletter', '6281111111111@s.whatsapp.net')
+nix.newsletterDemote('1231111111111@newsletter', '6281111111111@s.whatsapp.net')
 
 // --- Change owner
-sock.newsletterChangeOwner('1231111111111@newsletter', '6281111111111@s.whatsapp.net')
+nix.newsletterChangeOwner('1231111111111@newsletter', '6281111111111@s.whatsapp.net')
 
 // --- Update newsletter
-sock.newsletterUpdate('1231111111111@newsletter', { name: 'nix408' })
+nix.newsletterUpdate('1231111111111@newsletter', { name: 'nix408' })
 
 // --- Change name
-sock.newsletterUpdateName('1231111111111@newsletter', '📦 nix408')
+nix.newsletterUpdateName('1231111111111@newsletter', '📦 nix408')
 
 // --- Change description
-sock.newsletterUpdateDescription('1231111111111@newsletter', '📣 Fresh updates weekly')
+nix.newsletterUpdateDescription('1231111111111@newsletter', '📣 Fresh updates weekly')
 
 // --- Change photo
-sock.newsletterUpdatePicture('1231111111111@newsletter', {
+nix.newsletterUpdatePicture('1231111111111@newsletter', {
    url: 'path/to/image.jpg'
 })
 
 // --- Remove photo
-sock.newsletterRemovePicture('1231111111111@newsletter')
+nix.newsletterRemovePicture('1231111111111@newsletter')
 
 // --- React to a message
-sock.newsletterReactMessage('1231111111111@newsletter', '100', '💛')
+nix.newsletterReactMessage('1231111111111@newsletter', '100', '💛')
 
 // --- Get admin count
-const count = await sock.newsletterAdminCount('1231111111111@newsletter')
+const count = await nix.newsletterAdminCount('1231111111111@newsletter')
 
 // --- Get all subscribed newsletters
-const newsletters = await sock.newsletterSubscribed()
+const newsletters = await nix.newsletterSubscribed()
 console.dir(newsletters, { depth: null })
 
 // --- Fetch newsletter messages
-const messages = sock.newsletterFetchMessages('jid', '1231111111111@newsletter', 50, 0, 0)
+const messages = nix.newsletterFetchMessages('jid', '1231111111111@newsletter', 50, 0, 0)
 console.dir(messages, { depth: null })
 
 // --- Delete newsletter
-sock.newsletterDelete('1231111111111@newsletter')
+nix.newsletterDelete('1231111111111@newsletter')
 ```
 
 #### Group Management
 
 ```javascript
 // --- Create a new one and add participants using their JIDs
-const group = sock.groupCreate('nix408', ['628123456789@s.whatsapp.net'])
+const group = nix.groupCreate('nix408', ['628123456789@s.whatsapp.net'])
 console.dir(group, { depth: null })
 
 // --- Get info
-const metadata = await sock.groupMetadata(jid)
+const metadata = await nix.groupMetadata(jid)
 console.dir(metadata, { depth: null })
 
 // --- Get group invite code
-const inviteCode = await sock.groupInviteCode(jid)
+const inviteCode = await nix.groupInviteCode(jid)
 console.dir(inviteCode, { depth: null })
 
 
 // --- Revoke invite link
-sock.groupRevokeInvite(jid)
+nix.groupRevokeInvite(jid)
 
 // --- Accept group invite
-sock.groupAcceptInvite(inviteCode)
+nix.groupAcceptInvite(inviteCode)
 
 // --- Leave group
-sock.groupLeave(jid)
+nix.groupLeave(jid)
 
 // --- Add participants
-sock.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'add')
+nix.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'add')
 
 // --- Remove participants
-sock.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'remove')
+nix.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'remove')
 
 // --- Promote to admin
-sock.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'promote')
+nix.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'promote')
 
 // --- Demote from admin
-sock.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'demote')
+nix.groupParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'demote')
 
 // --- Accept join requests
-sock.groupRequestParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'approve')
+nix.groupRequestParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'approve')
 
 // --- Change name
-sock.groupUpdateSubject(jid, '📦 nix408')
+nix.groupUpdateSubject(jid, '📦 nix408')
 
 // --- Change description
-sock.groupUpdateDescription(jid, 'Updated description')
+nix.groupUpdateDescription(jid, 'Updated description')
 
 // --- Change photo
-sock.updateProfilePicture(jid, {
+nix.updateProfilePicture(jid, {
    url: 'path/to/image.jpg'
 })
 
 // --- Remove photo
-sock.removeProfilePicture(jid)
+nix.removeProfilePicture(jid)
 
 // --- Set group as admin only for chatting
-sock.groupSettingUpdate(jid, 'announcement')
+nix.groupSettingUpdate(jid, 'announcement')
 
 // --- Set group as open to all for chatting
-sock.groupSettingUpdate(jid, 'not_announcement')
+nix.groupSettingUpdate(jid, 'not_announcement')
 
 // --- Set admin only can edit group info
-sock.groupSettingUpdate(jid, 'locked')
+nix.groupSettingUpdate(jid, 'locked')
 
 // --- Set all participants can edit group info
-sock.groupSettingUpdate(jid, 'unlocked')
+nix.groupSettingUpdate(jid, 'unlocked')
 
 // --- Set admin only can add participants
-sock.groupMemberAddMode(jid, 'admin_add')
+nix.groupMemberAddMode(jid, 'admin_add')
 
 // --- Set all participants can add participants
-sock.groupMemberAddMode(jid, 'all_member_add')
+nix.groupMemberAddMode(jid, 'all_member_add')
 
 // --- Enable or disable temporary messages with seconds format
-sock.groupToggleEphemeral(jid, 86400)
+nix.groupToggleEphemeral(jid, 86400)
 
 // --- Disable temporary messages
-sock.groupToggleEphemeral(jid, 0)
+nix.groupToggleEphemeral(jid, 0)
 
 // --- Enable or disable membership approval mode
-sock.groupJoinApprovalMode(jid, 'on')
-sock.groupJoinApprovalMode(jid, 'off')
+nix.groupJoinApprovalMode(jid, 'on')
+nix.groupJoinApprovalMode(jid, 'off')
 
 // --- Get all groups metadata
-const groups = await sock.groupFetchAllParticipating()
+const groups = await nix.groupFetchAllParticipating()
 console.dir(groups, { depth: null })
 
 // --- Get pending join requests
-const requests = await sock.groupRequestParticipantsList(jid)
+const requests = await nix.groupRequestParticipantsList(jid)
 console.dir(requests, { depth: null })
 
 // --- Get group info from link
-const group = await sock.groupGetInviteInfo('ABC123456789')
+const group = await nix.groupGetInviteInfo('ABC123456789')
 console.log('👥 Got group info from invite code', ':', group)
 
 // --- Update bot member label
-sock.updateMemberLabel(jid, 'nix408')
+nix.updateMemberLabel(jid, 'nix408')
 ```
 
 #### Community Management
 
 ```javascript
 // --- Create a new one and add description
-const community = await sock.communityCreate('nix408', '📣 Fresh updates weekly')
+const community = await nix.communityCreate('nix408', '📣 Fresh updates weekly')
 console.dir(community, { depth: null })
 
 // --- Create a subgroup for community and add participants using their JIDs
-const group = await sock.communityCreateGroup('📢 Announcements', ['628123456789@s.whatsapp.net'], communityJid)
+const group = await nix.communityCreateGroup('📢 Announcements', ['628123456789@s.whatsapp.net'], communityJid)
 
 // --- Link an existing group
-sock.communityLinkGroup(groupJid, communityJid)
+nix.communityLinkGroup(groupJid, communityJid)
 
 // --- Unlink an existing group
-sock.communityUnlinkGroup(groupJid, communityJid)
+nix.communityUnlinkGroup(groupJid, communityJid)
 
 // --- Get info
-const metadata = await sock.communityMetadata(jid)
+const metadata = await nix.communityMetadata(jid)
 console.dir(metadata, { depth: null })
 
 // --- Get community invite code
-const inviteCode = await sock.communityInviteCode(jid)
+const inviteCode = await nix.communityInviteCode(jid)
 console.dir(inviteCode, { depth: null })
 
 // --- Revoke invite link
-sock.communityRevokeInvite(jid)
+nix.communityRevokeInvite(jid)
 
 // --- Accept community invite
-sock.communityAcceptInvite(inviteCode)
+nix.communityAcceptInvite(inviteCode)
 
 // --- Leave community
-sock.communityLeave(jid)
+nix.communityLeave(jid)
 
 // --- Accept join requests
-sock.communityRequestParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'approve')
+nix.communityRequestParticipantsUpdate(jid, ['628123456789@s.whatsapp.net'], 'approve')
 
 // --- Change name
-sock.communityUpdateSubject(jid, '📦 nix408')
+nix.communityUpdateSubject(jid, '📦 nix408')
 
 // --- Change description
-sock.communityUpdateDescription(jid, 'Updated description')
+nix.communityUpdateDescription(jid, 'Updated description')
 
 // --- Set community as admin only for chatting
-sock.communitySettingUpdate(jid, 'announcement')
+nix.communitySettingUpdate(jid, 'announcement')
 
 // --- Set community as open to all for chatting
-sock.communitySettingUpdate(jid, 'not_announcement')
+nix.communitySettingUpdate(jid, 'not_announcement')
 
 // --- Set admin only can edit community info
-sock.communitySettingUpdate(jid, 'locked')
+nix.communitySettingUpdate(jid, 'locked')
 
 // --- Set all participants can edit community info
-sock.communitySettingUpdate(jid, 'unlocked')
+nix.communitySettingUpdate(jid, 'unlocked')
 
 // --- Set admin only can add participants
-sock.communityMemberAddMode(jid, 'admin_add')
+nix.communityMemberAddMode(jid, 'admin_add')
 
 // --- Set all participants can add participants
-sock.communityMemberAddMode(jid, 'all_member_add')
+nix.communityMemberAddMode(jid, 'all_member_add')
 
 // --- Enable or disable temporary messages with seconds format
-sock.communityToggleEphemeral(jid, 86400)
+nix.communityToggleEphemeral(jid, 86400)
 
 // --- Disable temporary messages
-sock.communityToggleEphemeral(jid, 0)
+nix.communityToggleEphemeral(jid, 0)
 
 // --- Enable or disable membership approval mode
-sock.communityJoinApprovalMode(jid, 'on')
-sock.communityJoinApprovalMode(jid, 'off')
+nix.communityJoinApprovalMode(jid, 'on')
+nix.communityJoinApprovalMode(jid, 'off')
 
 // --- Get all communities metadata
-const communities = await sock.communityFetchAllParticipating()
+const communities = await nix.communityFetchAllParticipating()
 console.dir(communities, { depth: null })
 
 // --- Get all community linked groups
-const linked = await sock.communityFetchLinkedGroups(jid)
+const linked = await nix.communityFetchLinkedGroups(jid)
 console.dir(linked, { depth: null })
 
 // --- Get pending join requests
-const requests = await sock.communityRequestParticipantsList(jid)
+const requests = await nix.communityRequestParticipantsList(jid)
 console.dir(requests, { depth: null })
 
 // --- Get community info from link
-const community = await sock.communityGetInviteInfo('ABC123456789')
+const community = await nix.communityGetInviteInfo('ABC123456789')
 console.log('👥 Got community info from invite code', ':', community)
 ```
 
@@ -1788,64 +1835,64 @@ console.log('👥 Got community info from invite code', ':', community)
 
 ```javascript
 // --- Get user profile picture
-const url = await sock.profilePictureUrl(jid, 'image')
+const url = await nix.profilePictureUrl(jid, 'image')
 console.log('🖼️ Got user profile url', url)
 
 // --- Update profile picture
-sock.updateProfilePicture(jid, buffer)
-sock.updateProfilePicture(jid, { url })
+nix.updateProfilePicture(jid, buffer)
+nix.updateProfilePicture(jid, { url })
 
 // --- Remove profile picture
-sock.removeProfilePicture(jid)
+nix.removeProfilePicture(jid)
 
 // --- Update profile name
-sock.updateProfileName('My Name')
+nix.updateProfileName('My Name')
 
 // --- Update profile status
-sock.updateProfileStatus('Available')
+nix.updateProfileStatus('Available')
 
 // --- Presence
-sock.sendPresenceUpdate('available', jid)
-sock.presenceSubscribe(jid)
+nix.sendPresenceUpdate('available', jid)
+nix.presenceSubscribe(jid)
 
 // --- Read receipts
-sock.readMessages([message.key])
-sock.sendReceipt(jid, participant, [messageId], 'read')
+nix.readMessages([message.key])
+nix.sendReceipt(jid, participant, [messageId], 'read')
 
 // --- Block user
-sock.updateBlockStatus(jid, 'block')
+nix.updateBlockStatus(jid, 'block')
 
 // --- Unblock user
-sock.updateBlockStatus(jid, 'unblock')
+nix.updateBlockStatus(jid, 'unblock')
 
 // --- Fetch blocklist
-const blocked = await sock.fetchBlocklist()
+const blocked = await nix.fetchBlocklist()
 console.dir(blocked, { depth: null })
 
 // --- Modify chats
-sock.chatModify({
+nix.chatModify({
    archive: true,
    lastMessageOrig: message,
    lastMessage: message
 }, jid)
 
 // --- Star messages
-sock.star(jid, [{ id: messageId, fromMe: true }], true)
+nix.star(jid, [{ id: messageId, fromMe: true }], true)
 
 // --- Contact
-sock.addOrEditContact(jid, { displayName: 'Starseed' })
-sock.removeContact(jid)
+nix.addOrEditContact(jid, { displayName: 'Starseed' })
+nix.removeContact(jid)
 
 // --- Label
-sock.addChatLabel(jid, labelId)
-sock.removeChatLabel(jid, labelId)
-sock.addMessageLabel(jid, messageId, labelId)
+nix.addChatLabel(jid, labelId)
+nix.removeChatLabel(jid, labelId)
+nix.addMessageLabel(jid, messageId, labelId)
 
 // --- App state sync
-sock.resyncAppState(['regular', 'critical_block'], true)
+nix.resyncAppState(['regular', 'critical_block'], true)
 
 // --- Get business profile
-const profile = await sock.getBusinessProfile(jid)
+const profile = await nix.getBusinessProfile(jid)
 console.dir(profile, { depth: null })
 ```
 
@@ -1853,7 +1900,7 @@ console.dir(profile, { depth: null })
 
 ```javascript
 // --- Create a new product
-const product = await sock.productCreate({
+const product = await nix.productCreate({
    name: '🧩 Starseed (Premium)',
    description: 'Get a full version of Starseed!',
    price: 100000,
@@ -1869,7 +1916,7 @@ const product = await sock.productCreate({
 console.dir(product, { depth: null })
 
 // --- Update product
-await sock.productUpdate(productId, {
+await nix.productUpdate(productId, {
    name: '🧩 Starseed (Premium)',
    description: 'Get a full version of Starseed with more features!',
    price: 75000,
@@ -1882,24 +1929,24 @@ await sock.productUpdate(productId, {
 })
 
 // --- Delete product
-sock.productDelete([productId])
+nix.productDelete([productId])
 
 // --- Get catalog info
-const { products, nextPageCursor } = await sock.getCatalog({
+const { products, nextPageCursor } = await nix.getCatalog({
   jid: '628123456789@s.whatsapp.net',
   limit: 10
 })
 
 // --- Get collections
-const collections = await sock.getCollections('628123456789@s.whatsapp.net', 10)
+const collections = await nix.getCollections('628123456789@s.whatsapp.net', 10)
 console.dir(collections, { depth: null })
 
 // --- Get order info
-const order = await sock.getOrderDetails(orderId, tokenBase64)
+const order = await nix.getOrderDetails(orderId, tokenBase64)
 console.dir(order, { depth: null })
 
 // --- Update business profile
-await sock.updateBusinessProfile({
+await nix.updateBusinessProfile({
    address: 'Jakarta, Indonesia',
    description: '🛒 Official Starseed Store',
    websites: ['https://github.com/marrspace/nix408'],
@@ -1911,102 +1958,104 @@ await sock.updateBusinessProfile({
 })
 
 // --- Update cover
-sock.updateCoverPhoto({
+nix.updateCoverPhoto({
    url: './path/to/image.jpg'
 })
 
 // --- Remove cover
-sock.removeCoverPhoto(coverId)
+nix.removeCoverPhoto(coverId)
 
 // --- Update quick replies
-sock.addOrEditQuickReply({
+nix.addOrEditQuickReply({
   shortcut: 'hello',
   message: 'Hello from business account',
 })
 
 // --- Remove quick reply
-sock.removeQuickReply(timestamp)
+nix.removeQuickReply(timestamp)
 ```
 
 #### Privacy Management
 
 ```javascript
 // --- Update last seen privacy
-sock.updateLastSeenPrivacy('all')
-sock.updateLastSeenPrivacy('contacts')
-sock.updateLastSeenPrivacy('contact_blacklist')
-sock.updateLastSeenPrivacy('nobody')
+nix.updateLastSeenPrivacy('all')
+nix.updateLastSeenPrivacy('contacts')
+nix.updateLastSeenPrivacy('contact_blacklist')
+nix.updateLastSeenPrivacy('nobody')
 
 // --- Update online privacy
-sock.updateOnlinePrivacy('all')
-sock.updateOnlinePrivacy('match_last_seen')
+nix.updateOnlinePrivacy('all')
+nix.updateOnlinePrivacy('match_last_seen')
 
 // --- Update profile picture privacy
-sock.updateProfilePicturePrivacy('contacts')
+nix.updateProfilePicturePrivacy('contacts')
 
 // --- Update status privacy
-sock.updateStatusPrivacy('contacts')
+nix.updateStatusPrivacy('contacts')
 
 // --- Update read receipts privacy
-sock.updateReadReceiptsPrivacy('all')
-sock.updateReadReceiptsPrivacy('none')
+nix.updateReadReceiptsPrivacy('all')
+nix.updateReadReceiptsPrivacy('none')
 
 // --- Update groups add privacy
-sock.updateGroupsAddPrivacy('all')
-sock.updateGroupsAddPrivacy('contacts')
+nix.updateGroupsAddPrivacy('all')
+nix.updateGroupsAddPrivacy('contacts')
 
 // --- Update messages privacy
-sock.updateMessagesPrivacy('all')
-sock.updateMessagesPrivacy('contacts')
-sock.updateMessagesPrivacy('nobody')
+nix.updateMessagesPrivacy('all')
+nix.updateMessagesPrivacy('contacts')
+nix.updateMessagesPrivacy('nobody')
 
 // --- Update call privacy
-sock.updateCallPrivacy('everyone')
+nix.updateCallPrivacy('everyone')
 
 // --- Update default disappearing mode
-sock.updateDefaultDisappearingMode(86400)
+nix.updateDefaultDisappearingMode(86400)
 
 // --- Update link previews privacy
-sock.updateDisableLinkPreviewsPrivacy(true)
+nix.updateDisableLinkPreviewsPrivacy(true)
 ```
 
 #### Events
 
 ```javascript
-sock.ev.on('connection.update', async (update) => {})
-sock.ev.on('creds.update', (update) => {})
-sock.ev.on('messaging-history.set', (update) => {})
-sock.ev.on('messaging-history.status', (update) => {})
-sock.ev.on('chats.upsert', (update) => {})
-sock.ev.on('chats.update', (update) => {})
-sock.ev.on('chats.delete', (update) => {})
-sock.ev.on('chats.lock', (update) => {})
-sock.ev.on('lid-mapping.update', (update) => {})
-sock.ev.on('presence.update', (update) => {})
-sock.ev.on('contacts.upsert', (update) => {})
-sock.ev.on('contacts.update', (update) => {})
-sock.ev.on('messages.delete', (update) => {})
-sock.ev.on('messages.update', (update) => {})
-sock.ev.on('messages.media-update', (update) => {})
-sock.ev.on('messages.upsert', (update) => {})
-sock.ev.on('messages.reaction', (update) => {})
-sock.ev.on('message-receipt.update', (update) => {})
-sock.ev.on('groups.upsert', (update) => {})
-sock.ev.on('groups.update', (update) => {})
-sock.ev.on('group-participants.update', (update) => {})
-sock.ev.on('group.join-request', (update) => {})
-sock.ev.on('group.member-tag.update', (update) => {})
-sock.ev.on('blocklist.set', (update) => {})
-sock.ev.on('blocklist.update', (update) => {})
-sock.ev.on('call', (update) => {})
-sock.ev.on('labels.edit', (update) => {})
-sock.ev.on('labels.association', (update) => {})
-sock.ev.on('newsletter.reaction', (update) => {})
-sock.ev.on('newsletter.view', (update) => {})
-sock.ev.on('newsletter-participants.update', (update) => {})
-sock.ev.on('newsletter-settings.update', (update) => {})
-sock.ev.on('settings.update', (update) => {})
+nix.ev.on('connection.update', async (update) => {})
+nix.ev.on('creds.update', (update) => {})
+nix.ev.on('messaging-history.set', (update) => {})
+nix.ev.on('messaging-history.status', (update) => {})
+nix.ev.on('chats.upsert', (update) => {})
+nix.ev.on('chats.update', (update) => {})
+nix.ev.on('chats.delete', (update) => {})
+nix.ev.on('chats.lock', (update) => {})
+nix.ev.on('lid-mapping.update', (update) => {})
+nix.ev.on('presence.update', (update) => {})
+nix.ev.on('contacts.upsert', (update) => {})
+nix.ev.on('contacts.update', (update) => {})
+nix.ev.on('messages.delete', (update) => {})
+nix.ev.on('messages.update', (update) => {})
+nix.ev.on('messages.media-update', (update) => {})
+nix.ev.on('messages.upsert', (update) => {})
+nix.ev.on('messages.reaction', (update) => {})
+nix.ev.on('message-receipt.update', (update) => {})
+nix.ev.on('groups.upsert', (update) => {})
+nix.ev.on('groups.update', (update) => {})
+nix.ev.on('group-participants.update', (update) => {})
+nix.ev.on('group.join-request', (update) => {})
+nix.ev.on('group.member-tag.update', (update) => {})
+nix.ev.on('blocklist.set', (update) => {})
+nix.ev.on('blocklist.update', (update) => {})
+nix.ev.on('call', (update) => {})
+nix.ev.on('labels.edit', (update) => {})
+nix.ev.on('labels.association', (update) => {})
+nix.ev.on('newsletter.reaction', (update) => {})
+nix.ev.on('newsletter.view', (update) => {})
+nix.ev.on('newsletter-participants.update', (update) => {})
+nix.ev.on('newsletter-settings.update', (update) => {})
+nix.ev.on('settings.update', (update) => {})
 ```
+
+<p align="right"><a href="#nix408">↑ back to top</a></p>
 
 ## Links
 
@@ -2015,10 +2064,14 @@ sock.ev.on('settings.update', (update) => {})
 - **Upstream fork** — https://github.com/itsliaaa/baileys
 - **Original Baileys** — https://github.com/WhiskeySockets/Baileys
 
+<p align="right"><a href="#nix408">↑ back to top</a></p>
+
 ## Lineage
 
 `nix408` → [@itsliaaa/baileys](https://github.com/itsliaaa/baileys) →
 [WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys)
+
+<p align="right"><a href="#nix408">↑ back to top</a></p>
 
 ## Credits
 
